@@ -87,3 +87,7 @@ local_settings.py
 # Virtual environment
 .venv
 db.sqlite3
+
+
+# Media files
+media/
