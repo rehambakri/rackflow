@@ -26,7 +26,11 @@ class Product(models.Model):
     )
 
     category = models.ForeignKey(
-        to=Category, on_delete=models.RESTRICT, verbose_name="Product Category"
+        to=Category,
+        on_delete=models.RESTRICT,
+        verbose_name="Product Category",
+        null=False,
+        blank=False,
     )
 
     @property

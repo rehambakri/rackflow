@@ -91,3 +91,4 @@ db.sqlite3
 
 # Media files
 media/
+tailwind.config.js
