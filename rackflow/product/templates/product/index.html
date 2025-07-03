@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<ul class="flex-col justify-center items-center gap-4">
+    {% for product in products %}
+    <li>
+        {{ product.name }}
+        {{ product.image }}
+        {{ product.category }}
+        {{ product.quantity }}
+    </li>
+
+    {% endfor %}
+</ul>
+
+{% endblock content %}
