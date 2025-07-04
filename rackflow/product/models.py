@@ -5,7 +5,7 @@ from django.db.models import Sum
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, null=False, blank=False)
+    name = models.CharField(max_length=100, null=False, blank=False, unique=True)
 
     def __str__(self):
         return str(self.name)
@@ -16,7 +16,9 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField("Product Name", max_length=100, null=False, blank=False)
+    name = models.CharField(
+        "Product Name", max_length=100, null=False, blank=False, unique=True
+    )
 
     image = models.ImageField(
         "Product Image",
@@ -35,7 +37,7 @@ class Product(models.Model):
 
     @property
     def quantity(self):
-        result = self.productdetails_set.aggregate(total=Sum("quantity"))
+        result = self.details.aggregate(total=Sum("quantity"))
         return result["total"] or 0
 
     def __str__(self):
@@ -46,7 +48,9 @@ class Product(models.Model):
 
 
 class ProductDetails(models.Model):
-    product = models.ForeignKey(to=Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        to=Product, on_delete=models.CASCADE, related_name="details"
+    )
     expire_date = models.DateField(
         auto_now=False, auto_now_add=False, null=False, blank=False
     )
