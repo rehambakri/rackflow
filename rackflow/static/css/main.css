@@ -1,3 +1,9 @@
-:root{
-   
+:root {
+    --background: #e84343;
+
+    --primary-light: #ffe798;
+    --primary: #fcbf4a;
+    --primary-dark: #c9961d;
+
+    --secondary: #efeed0;
 }

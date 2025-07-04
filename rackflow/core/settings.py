@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "authentication.apps.AuthenticationConfig"
+    "authentication.apps.AuthenticationConfig",
+    "product.apps.ProductConfig",
+    "provider.apps.ProviderConfig",
 ]
 
 MIDDLEWARE = [
@@ -55,7 +57,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [BASE_DIR/'templates'],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -75,12 +77,12 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "default": {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'rackflowdb',  # Replace with the name of your PostgreSQL database
-        'USER': 'django',  # Replace with your PostgreSQL user
-        'PASSWORD': '123456', # Replace with your PostgreSQL user's password
-        'HOST': 'localhost',        # Or the IP address/hostname of your PostgreSQL server
-        'PORT': '5432',             # Default PostgreSQL port
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "rackflowdb",  # Replace with the name of your PostgreSQL database
+        "USER": "django",  # Replace with your PoAuthenticationConfigstgreSQL user
+        "PASSWORD": "123456",  # Replace with your PostgreSQL user's password
+        "HOST": "localhost",  # Or the IP address/hostname of your PostgreSQL server
+        "PORT": "5432",  # Default PostgreSQL port
     }
 }
 
@@ -120,16 +122,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 
-MEDIA_URL = '/media/'  # URL prefix for media files
-MEDIA_ROOT = BASE_DIR/'media'
+MEDIA_URL = "/media/"  # URL prefix for media files
+MEDIA_ROOT = BASE_DIR / "media"
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS=[
-    BASE_DIR/'static',
+STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-AUTH_USER_MODEL = 'authentication.CustomUser'
+AUTH_USER_MODEL = "authentication.CustomUser"
