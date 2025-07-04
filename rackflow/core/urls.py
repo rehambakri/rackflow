@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from django.shortcuts import render
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',lambda req: render(req,'base.html')),
-]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+    path("admin/", admin.site.urls),
+    path("product/", include("product.urls")),
+    path('', include('authentication.urls')), 
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
