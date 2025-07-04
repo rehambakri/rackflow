@@ -26,7 +26,7 @@ class Shipment(models.Model):
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
 
-    c_date = models.DateTimeField(auto_now_add=True)
+    c_date = models.DateTimeField(auto_now=True)
     a_date = models.DateTimeField(
         null=True,
         blank=True,
@@ -42,6 +42,10 @@ class Shipment(models.Model):
         related_name="shipments",
     )
 
+    class Meta:
+        db_table = "shipments"
+        verbose_name_plural = "shipments"
+
     def __str__(self):
         return f"Shipment #{self.id} - Provider: {self.provider.name} - Status: {self.status}"
 
@@ -54,6 +58,8 @@ class ShipmentProduct(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     class Meta:
+        db_table = "shipment_products"
+        verbose_name_plural = "shipment_products"
         unique_together = ("shipment", "product")
 
     def __str__(self):
