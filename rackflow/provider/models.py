@@ -18,6 +18,7 @@ class Shipment(models.Model):
         ("pending", "Pending"),
         ("accepted", "Accepted"),
         ("arrived", "Arrived"),
+        ("canceled", "Canceled"),
     ]
 
     provider = models.ForeignKey(
@@ -26,7 +27,7 @@ class Shipment(models.Model):
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
 
-    c_date = models.DateTimeField(auto_now=True)
+    c_date = models.DateTimeField(auto_now_add=True)
     a_date = models.DateTimeField(
         null=True,
         blank=True,
