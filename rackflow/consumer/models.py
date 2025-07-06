@@ -1,8 +1,7 @@
 from django.db import models
-from product.models import Product
-from product.models import ProductDetails
-from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from product.models import Product, ProductDetails
 
 # Create your models here.
 
@@ -33,12 +32,6 @@ class Order(models.Model):
     c_date = models.DateTimeField(auto_now_add=True)
     a_date = models.DateField(null=True, blank=True)
 
-    product_details = models.ForeignKey(
-        ProductDetails,
-        on_delete=models.CASCADE,
-        related_name="product_details",
-        null=True,
-    )
     product = models.ManyToManyField(
         Product, through="OrderProduct", related_name="orders"
     )
