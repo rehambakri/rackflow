@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "authentication.apps.AuthenticationConfig",
     "product.apps.ProductConfig",
     "provider.apps.ProviderConfig",
+    "consumer.apps.ConsumerConfig",
 ]
 
 MIDDLEWARE = [
