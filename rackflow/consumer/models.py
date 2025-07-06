@@ -20,7 +20,7 @@ class Consumer(models.Model):
 
 class Order(models.Model):
     STATUS_CHOICE = [
-        ("pending", "Pinding"),
+        ("pending", "Pending"),
         ("accepted", "Accepted"),
         ("canceled", "Canceled"),
     ]
@@ -43,7 +43,7 @@ class Order(models.Model):
         Product, through="OrderProduct", related_name="orders"
     )
 
-    def change_status(self, new_status):
+    """ def change_status(self, new_status):
         self.status = new_status
         if self.status == "accepted" and self.a_date is None:
             self.a_date = timezone.now()
@@ -55,14 +55,15 @@ class Order(models.Model):
         order = get_object_or_404(Order, pk=id)
         if order.status == "accepted":
             for product in order.product.all():
-                expire_date = product.product_details.expire_date
+                expire_date = self.product_details.expire_date
                 if expire_date and order.a_date:
                     difference = (expire_date - order.a_date).days
-                    if difference > 4:
+                    if difference <= 4:
                         order.status = "canceled"
                         order.save()
                         return order.status
             return order.status
+    """
 
     def __str__(self):
         return (
