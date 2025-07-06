@@ -1,9 +1,34 @@
 :root {
+    --background-light: #f29d9d;
     --background: #e84343;
+    --background-dark: #b93636;
 
     --primary-light: #ffe798;
     --primary: #fcbf4a;
     --primary-dark: #c9961d;
 
+    --secondary-light: #f8f8ea;
     --secondary: #efeed0;
+    --secondary-dark: #c5c4a9;
+}
+
+@keyframes expand-line {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+.expand-underline::before {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    height: 4px;
+    width: 0%;
+    background-color: var(--background);
+    animation: expand-line 1s forwards;
 }
