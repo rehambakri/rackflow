@@ -3,7 +3,7 @@ import sys
 
 import django
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)), "rackflow"))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 django.setup()
 
@@ -38,36 +38,24 @@ with open(script_dir / "data.json", "r") as f:
     data = json.load(f)
 
 # a set containing already existing categories
-existing_categories = {c.name for c in Category.objects.get_queryset()}
 existing_products = {p.name for p in Product.objects.get_queryset()}
 
-count = 0
+ccount = 0
+pcount = 0
+pdcount = 0
 for prod in data:
     product_name = prod["name"]
     product_category = prod["category"]
     product_image = prod["image"]
 
-    # Make a new category in the database if not already made
-    if not product_category in existing_categories:
-        cat = Category(name=product_category)
-        cat.save()
-        existing_categories.add(product_category)
-    else:
-        cat = Category.objects.get(name=product_category)
+    category, res = Category.objects.get_or_create(name=product_category)
+    ccount += int(res)
+    product, res = Product.objects.get_or_create(
+        name=product_name, image=product_image, category=category
+    )
+    pcount += int(res)
 
-    if not product_name in existing_products:
-        product = Product(name=product_name, image=product_image, category=cat)
-        product.save()
-        existing_products.add(product_name)
-        count += 1
-    else:
-        continue
-
-    # generate 1 to 5 random product details for each product
-    # NOTE: for the same product we can't create more than one expiration date in product details
-    # product: Milk, Expire Date: 2025-3-21, Quantity = 20
-    # product: Milk, Expire Date: 2025-3-21, Quantity = 40 xxx
-    dates = set()
+    seen_details = {detail.expire_date for detail in ProductDetails.objects.all()}
     for i in range(randint(1, 5)):
         random_expire_year = randint(
             int(datetime.now().year), int(datetime.now().year) + randint(0, 3)
@@ -86,18 +74,18 @@ for prod in data:
         random_expire_date = datetime(
             random_expire_year, random_expire_month or 1, random_expire_day or 1
         )
-
-        # make sure while generating the random expiration dates that
-        # nothing was repeated for the same product
-        if random_expire_date in dates:
+        if random_expire_date.date() in seen_details:
             continue
-        else:
-            dates.add(random_expire_date)
-            product_details = ProductDetails(
-                product=product,
-                expire_date=random_expire_date,
-                quantity=randint(10, 100),
-            )
-            product_details.save()
+        seen_details.add((product.id, random_expire_date.date()))
 
-print(f"{GREEN}Created {count} products{NC}")
+        product_details, res = ProductDetails.objects.get_or_create(
+            product=product,
+            expire_date=random_expire_date,
+            quantity=randint(10, 100),
+        )
+        pdcount += int(res)
+
+
+print(f"{GREEN}Created {pcount} products{NC}")
+print(f"{GREEN}Created {ccount} categories{NC}")
+print(f"{GREEN}Created {pdcount} product_details{NC}")
