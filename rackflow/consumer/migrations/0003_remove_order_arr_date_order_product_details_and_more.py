@@ -5,25 +5,39 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('consumer', '0002_alter_order_options_alter_order_table_orderproduct_and_more'),
-        ('product', '0003_merge_20250704_2237'),
+        (
+            "consumer",
+            "0002_alter_order_options_alter_order_table_orderproduct_and_more",
+        ),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='order',
-            name='arr_date',
+            model_name="order",
+            name="arr_date",
         ),
         migrations.AddField(
-            model_name='order',
-            name='product_details',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='product_details', to='product.productdetails'),
+            model_name="order",
+            name="product_details",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="product_details",
+                to="product.productdetails",
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='status',
-            field=models.CharField(choices=[('pending', 'Pinding'), ('accepted', 'Accepted'), ('canceled', 'Canceled')], default='pending', max_length=20),
+            model_name="order",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("pending", "Pinding"),
+                    ("accepted", "Accepted"),
+                    ("canceled", "Canceled"),
+                ],
+                default="pending",
+                max_length=20,
+            ),
         ),
     ]

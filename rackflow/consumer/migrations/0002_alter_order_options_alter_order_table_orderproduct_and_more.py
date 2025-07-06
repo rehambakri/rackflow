@@ -5,38 +5,61 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('consumer', '0001_initial'),
-        ('product', '0003_merge_20250704_2237'),
+        ("consumer", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='order',
-            options={'verbose_name_plural': 'orders'},
+            name="order",
+            options={"verbose_name_plural": "orders"},
         ),
         migrations.AlterModelTable(
-            name='order',
-            table='orders',
+            name="order",
+            table="orders",
         ),
         migrations.CreateModel(
-            name='OrderProduct',
+            name="OrderProduct",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.PositiveIntegerField(default=1)),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='order_product', to='consumer.order')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.PositiveIntegerField(default=1)),
+                (
+                    "order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="order_product",
+                        to="consumer.order",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="product.product",
+                    ),
+                ),
             ],
             options={
-                'verbose_name_plural': 'order_products',
-                'db_table': 'order_products',
-                'unique_together': {('order', 'product')},
+                "verbose_name_plural": "order_products",
+                "db_table": "order_products",
+                "unique_together": {("order", "product")},
             },
         ),
         migrations.AddField(
-            model_name='order',
-            name='product',
-            field=models.ManyToManyField(related_name='orders', through='consumer.OrderProduct', to='product.product'),
+            model_name="order",
+            name="product",
+            field=models.ManyToManyField(
+                related_name="orders",
+                through="consumer.OrderProduct",
+                to="product.product",
+            ),
         ),
     ]
