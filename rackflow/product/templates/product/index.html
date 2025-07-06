@@ -34,7 +34,7 @@
             class="appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
           >
             {% for category in categories%}
-            <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}> {{category.name}}</option>
+            <option>{{category.name}}</option>
             {%endfor%}
           </select>
         </div>
@@ -60,7 +60,6 @@
           class="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pl-10 rounded-lg focus:outline-none focus:bg-white focus:border-gray-500"
           placeholder="Search..."
           type="text"
-          value="{{ search_query }}"
         />
       </div>
     </div>
@@ -126,15 +125,88 @@
           ></div>
         </div>
       </div>
-      <div class="flex items-center space-x-2">
-        <span>1-10 of 20</span>
-        <button class="p-1 rounded-md hover:bg-gray-200">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 text-sm text-gray-600">
+  <!-- Items count -->
+  <div class="flex items-center">
+    <span>Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }} items</span>
+  </div>
+
+  <!-- Pagination controls -->
+  <nav aria-label="Page navigation">
+    <ul class="flex items-center space-x-1">
+      <!-- Previous Button -->
+      <li class="{% if not page_obj.has_previous %}opacity-50 pointer-events-none{% endif %}">
+        <a 
+          href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}"
+          class="flex items-center justify-center p-2 rounded-md hover:bg-gray-200 transition-colors"
+          aria-label="Previous page"
+          {% if not page_obj.has_previous %}aria-disabled="true" tabindex="-1"{% endif %}
+        >
           <span class="material-icons">chevron_left</span>
-        </button>
-        <button class="p-1 rounded-md hover:bg-gray-200">
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+
+      <!-- First Page -->
+      {% if page_obj.number|add:'-3' > 1 %}
+        <li>
+          <a 
+            href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+            class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-200 transition-colors"
+          >
+            1
+          </a>
+        </li>
+        <li class="flex items-center justify-center w-10 h-10">
+          <span>...</span>
+        </li>
+      {% endif %}
+
+      <!-- Page Numbers -->
+      {% for num in page_obj.paginator.page_range %}
+        {% if num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <li>
+            <a 
+              href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+              class="flex items-center justify-center w-10 h-10 rounded-md transition-colors {% if page_obj.number == num %}bg-orange-500 text-white{% else %}hover:bg-gray-200{% endif %}"
+              aria-current="{% if page_obj.number == num %}page{% endif %}"
+            >
+              {{ num }}
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      <!-- Last Page -->
+      {% if page_obj.number|add:'3' < page_obj.paginator.num_pages %}
+        <li class="flex items-center justify-center w-10 h-10">
+          <span>...</span>
+        </li>
+        <li>
+          <a 
+            href="?page={{ page_obj.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+            class="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-200 transition-colors"
+          >
+            {{ page_obj.paginator.num_pages }}
+          </a>
+        </li>
+      {% endif %}
+
+      <!-- Next Button -->
+      <li class="{% if not page_obj.has_next %}opacity-50 pointer-events-none{% endif %}">
+        <a 
+          href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endif %}"
+          class="flex items-center justify-center p-2 rounded-md hover:bg-gray-200 transition-colors"
+          aria-label="Next page"
+          {% if not page_obj.has_next %}aria-disabled="true" tabindex="-1"{% endif %}
+        >
           <span class="material-icons">chevron_right</span>
-        </button>
-      </div>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
     </footer>
   </div>
   {% endblock %}
