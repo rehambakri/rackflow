@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "product.apps.ProductConfig",
     "provider.apps.ProviderConfig",
     "django_extensions",
+    "consumer.apps.ConsumerConfig",
 ]
 
 MIDDLEWARE = [

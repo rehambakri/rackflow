@@ -5,11 +5,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <title>{% block title %} Rackflow {% endblock title %}</title>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+      .gradient-bg {
+        background: linear-gradient(to bottom, #f9fafb 0%, #e5e7eb 100%);
+      }
+    </style>
   </head>
   <body>
-    
     {% block content %} {% endblock content %}
   </body>
 </html>
