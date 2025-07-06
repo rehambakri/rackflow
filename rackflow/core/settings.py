@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-)hn%(z-jb7(4b2s9&40&2*14hsgpq$lecu1^%6d@(vx!#536e7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "authentication.apps.AuthenticationConfig",
     "product.apps.ProductConfig",
     "provider.apps.ProviderConfig",
+    "django_extensions",
     "consumer.apps.ConsumerConfig",
 ]
 

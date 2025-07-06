@@ -9,3 +9,11 @@ dependencies = [
     "psycopg2>=2.9.10",
     "psycopg2-binary>=2.9.10",
 ]
+
+[dependency-groups]
+dev = [
+    "django-extensions>=4.1",
+    "pydot>=4.0.1",
+    "pyparsing>=3.2.3",
+    "rich>=14.0.0",
+]
