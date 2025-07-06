@@ -1,6 +1,8 @@
 from django.db import models
 from product.models import Product
+from product.models import ProductDetails
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
 # Create your models here.
 
@@ -19,9 +21,8 @@ class Consumer(models.Model):
 class Order(models.Model):
     STATUS_CHOICE = [
         ("pending", "Pinding"),
-        ("canceled", "Canceled"),
         ("accepted", "Accepted"),
-        ("arrived", "Arrived"),
+        ("canceled", "Canceled"),
     ]
 
     consumer = models.ForeignKey(
@@ -30,25 +31,43 @@ class Order(models.Model):
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICE, default="pending")
     c_date = models.DateTimeField(auto_now_add=True)
-    a_date = models.DateTimeField(null=True, blank=True)
-    arr_date = models.DateTimeField(null=True, blank=True)
+    a_date = models.DateField(null=True, blank=True)
+
+    product_details = models.ForeignKey(
+        ProductDetails,
+        on_delete=models.CASCADE,
+        related_name="product_details",
+        null=True,
+    )
+    product = models.ManyToManyField(
+        Product, through="OrderProduct", related_name="orders"
+    )
 
     def change_status(self, new_status):
         self.status = new_status
         if self.status == "accepted" and self.a_date is None:
             self.a_date = timezone.now()
-        elif self.status == "arrived" and self.arr_date is None:
-            self.arr_date = timezone.now()
         self.save()
+        return self.status
 
-    # expiration date logic method
 
-    product = models.ManyToManyField(
-        Product, through="OrderProduct", related_name="orders"
-    )
+    def check_expire_date(self, request, id):
+        order = get_object_or_404(Order, pk=id)
+        if order.status == "accepted":
+            for product in order.product.all():
+                expire_date = product.product_details.expire_date
+                if expire_date and order.a_date:
+                    difference = (expire_date - order.a_date).days
+                    if difference > 4:
+                        order.status = "canceled"
+                        order.save()
+                        return order.status
+            return order.status
 
     def __str__(self):
-        return f"Shipment #{self.id} - Provider: {self.provider.name} - Status: {self.status}"
+        return (
+            f"Order #{self.id} - Consumer: {self.consumer.name} - Status: {self.status}"
+        )
 
     class Meta:
         db_table = "orders"
