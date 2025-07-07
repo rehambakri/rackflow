@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "provider.apps.ProviderConfig",
     "django_extensions",
     "consumer.apps.ConsumerConfig",
+    "dashboard.apps.DashboardConfig",
 ]
 
 MIDDLEWARE = [
