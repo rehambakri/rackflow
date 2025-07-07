@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, DetailView
 
 from .forms import ProductForm
 
@@ -28,3 +28,9 @@ class ProductUpdate(UpdateView):
     template_name = "product/update.html"
     context_object_name = "products"
     success_url = reverse_lazy("product:list")
+
+
+class ProductDetails(DetailView):
+    model = Product
+    template_name = "product/details.html"
+    context_object_name = "product"

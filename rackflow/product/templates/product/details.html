@@ -1,0 +1,81 @@
+{% extends "base.html" %} {% load static %} {% block content %} 
+{% include "components/navbar.html" %}
+
+<div class="flex flex-1 justify-center w-full">
+  <div class="layout-content-container flex flex-col max-w-[960px] flex-1 py-4">
+      <p class="text-black text-center md:text-left tracking-light text-[32px] font-bold leading-tight p-4">
+        Product Details
+      </p>
+    <div
+      class="flex flex-col p-4 items-center justify-start rounded-lg md:flex-row md:items-start gap-6"
+    >
+      <img
+        class="w-full aspect-video max-w-[500px] bg-cover rounded-lg"
+        src="{{ product.image.url }}"
+        alt=""
+      />
+      <div
+        class="flex w-full min-w-72 grow flex-col items-center md:items-start justify-center gap-4 py-4 @xl:px-4"
+      >
+        <p
+          class="text-black text-lg font-bold leading-tight tracking-[-0.015em]"
+        >
+          <span class="text-[var(--primary-dark)]"> Name: </span>
+          {{ product.name }}
+        </p>
+
+        <p
+          class="text-black text-lg font-bold leading-tight tracking-[-0.015em]"
+        >
+          <span class="text-[var(--primary-dark)]"> Total Quantity: </span>
+          100
+        </p>
+      </div>
+    </div>
+    <h2
+      class="text-black text-center md:text-left text-[22px] font-bold leading-tight tracking-[-0.015em] p-4"
+    >
+      Inventory
+    </h2>
+    <div class="px-4 py-3">
+      <div
+        class="flex overflow-hidden rounded-lg border border-[#e9e1ce] bg-[#fcfbf8]"
+      >
+        <table class="flex-1 text-center md:text-left">
+          <thead>
+            <tr class="bg-[#fcfbf8]">
+              <th
+                class="px-4 py-3 text-center md:text-left text-dark w-[400px] text-sm font-medium leading-normal"
+              >
+                Expiration Date
+              </th>
+              <th
+                class="px-4 py-3 text-center md:text-left text-dark w-[400px] text-sm font-medium leading-normal"
+              >
+                Amount
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for productDetails in product.details.all %}
+            <tr class="border-t border-t-[#e9e1ce]">
+              <td
+                class="h-[72px] px-4 py-2 w-[400px] text-[var(--primary-dark)] text-sm font-normal leading-normal"
+              >
+                {{ productDetails.expire_date }}
+              </td>
+              <td
+                class="h-[72px] px-4 py-2 w-[400px] text-[var(--primary-dark)] text-sm font-normal leading-normal"
+              >
+                {{ productDetails.quantity }} lbs
+              </td>
+            </tr>
+            {% endfor %}
+          
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
