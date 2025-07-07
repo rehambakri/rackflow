@@ -1,19 +1,27 @@
 {% extends "base.html" %} {% load static %} {% block content %} 
-{% include "components/navbar.html" %}
 
 <div class="flex flex-1 justify-center w-full">
   <div class="layout-content-container flex flex-col max-w-[960px] flex-1 py-4">
-      <p class="text-black text-center md:text-left tracking-light text-[32px] font-bold leading-tight p-4">
+    <div class="flex items-center gap-4 p-4" >
+      <a href="{% url 'product:list' %}">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
+      </a>
+
+      <p class="text-black text-center md:text-left tracking-light text-[32px] font-bold leading-tight">
         Product Details
       </p>
+    </div>
     <div
       class="flex flex-col p-4 items-center justify-start rounded-lg md:flex-row md:items-start gap-6"
     >
+    <div class="w-full max-w-[500px]">
+
       <img
-        class="w-full aspect-video max-w-[500px] bg-cover rounded-lg"
-        src="{{ product.image.url }}"
-        alt=""
+      class=" max-w-100 bg-cover rounded-lg"
+      src="{{ product.image.url }}"
+      alt=""
       />
+    </div>
       <div
         class="flex w-full min-w-72 grow flex-col items-center md:items-start justify-center gap-4 py-4 @xl:px-4"
       >
@@ -67,7 +75,7 @@
               <td
                 class="h-[72px] px-4 py-2 w-[400px] text-[var(--primary-dark)] text-sm font-normal leading-normal"
               >
-                {{ productDetails.quantity }} lbs
+                {{ productDetails.quantity }}
               </td>
             </tr>
             {% endfor %}
