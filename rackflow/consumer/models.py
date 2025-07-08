@@ -2,11 +2,13 @@ from django.db import models
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from product.models import Product, ProductDetails
-
+from authentication.models import CustomUser
 # Create your models here.
 
 
 class Consumer(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
+
     name = models.CharField(max_length=50)
 
     def __str__(self):
@@ -18,6 +20,8 @@ class Consumer(models.Model):
 
 
 class Order(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
+
     STATUS_CHOICE = [
         ("pending", "Pending"),
         ("accepted", "Accepted"),
