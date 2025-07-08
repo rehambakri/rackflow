@@ -80,3 +80,5 @@ class ProductDetails(DetailView):
     model = Product
     template_name = "product/details.html"
     context_object_name = "product"
+    success_url = reverse_lazy("product:details")
+
