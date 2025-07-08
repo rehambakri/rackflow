@@ -53,11 +53,6 @@ class ProductList(ListView):
 
         return context
     
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     categories = Category.objects.all()
-    #     context["categories"] = categories
-    #     return context
 
 
 class ProductCreate(CreateView):
