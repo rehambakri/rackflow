@@ -96,7 +96,7 @@
         {% endif %}
 
         <li class="nav-item">
-          <form method="post" action="">
+          <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button
               class="btn btn-link nav-link hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)]"
@@ -115,15 +115,8 @@
             >Login</a
           >
         </li>
-        <li class="nav-item">
-          <a
-            class="nav-link hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)]"
-            href=""
-            >Register</a
-          >
-        </li>
 
-        {% endif %} {% if request.user %}
+        {% endif %} {% if user.id %}
         <li class="nav-item me-2">
           {% comment %}
           <a href="{% url 'profile_update' %}">

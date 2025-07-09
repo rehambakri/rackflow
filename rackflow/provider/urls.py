@@ -11,5 +11,5 @@ from . import views
 urlpatterns = [
     
     path("shipmentDetails/<int:pk>/", views.ShipmentDetails.as_view(), name="details"),
-    
+    path('shipments/', views.ListShipmentView.as_view(), name='list_shipments'),
 ]

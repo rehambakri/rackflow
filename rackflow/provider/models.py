@@ -1,8 +1,9 @@
 from django.db import models
 from product.models import Product
-
+from authentication.models import CustomUser
 
 class Provider(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=50)
 
     def __str__(self):
@@ -14,6 +15,7 @@ class Provider(models.Model):
 
 
 class Shipment(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,default=1)
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("accepted", "Accepted"),

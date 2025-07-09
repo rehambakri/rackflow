@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto p-6 md:p-8">
+
+  <!-- Header -->
+  <header class="flex flex-col sm:flex-row justify-between items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800">Product List</h1>
+    </div>
+  </header>
+
+
+  <!-- Product Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    {% for product in iscritical %}
+      <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        <a href="{% url 'product:details' product.id %}">
+          <img alt="{{ product.name }}" class="w-full h-48 object-cover" src="{{ product.image.url }}" />
+          <div class="p-5">
+              <h3 class="text-lg font-semibold text-gray-800 mb-1 truncate">{{ product.name }}</h3>
+              <p class="text-sm text-gray-500 mb-3">{{ product.category }}</p>
+              <div class="flex justify-between items-center mb-3">
+                  <p class="text-xl font-bold text-gray-800">{{ product.quantity }} in stock</p>
+                  <span class="text-sm px-2 py-1 rounded-full {% if product.quantity > 70 %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                      {% if product.quantity > 70 %}In Stock{% else %}Low Stock{% endif %}
+                    </span>
+                </div>
+            </a>
+          <div class="m-auto">
+            <a href="{% url 'product:update' product.id %}" class="mt-4 sm:mt-0 bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm flex items-center">
+              <span class="material-icons mr-2">edit</span>
+              Edit product
+            </a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-span-full text-center py-12">
+        <div class="text-gray-400 mb-4">
+          <span class="material-icons text-6xl">inventory_2</span>
+        </div>
+        <h3 class="text-xl font-medium text-gray-600 mb-2">No products found</h3>
+        <p class="text-gray-500">Try adjusting your search or filter criteria</p>
+      </div>
+    {% endfor %}
+  </div>
+
+
+
+</div>
+{% endblock %}
