@@ -1,0 +1,123 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<div class="gradient-bg flex items-center justify-center">
+  <div
+    class="bg-white p-8 md:p-12 rounded-xl shadow-2xl w-full mt-2 border border-gray-200 p-8"
+  >
+    <div class="flex bg-[var(--secondary-ligh)] p-4 pb-2 justify-between">
+      <h2
+        class="text-gray-900 text-3xl font-bold leading-tight tracking-[-0.015em] flex-1 pr-12 pl-8"
+      >
+        Add New Employee
+      </h2>
+    </div>
+    {{ form.errors }}
+    <form
+      method="POST"
+      class="mt-4 max-w-2xl p-4"
+    >
+      {% csrf_token %}
+
+      <div class="flex max-w-full flex-wrap items-end gap-4 px-4 py-3">
+        <label class="flex flex-col w-100 flex-1" for="first_name">
+          <p
+            class="text-[var(--primary-dark)] text-base font-medium leading-normal pb-2"
+          >
+            First Name
+          </p>
+          <input
+            placeholder="Enter first name"
+            class="border border-gray-500 form-input flex w-70px flex-1 overflow-hidden rounded-md text-gray-900 bg-[var(--secondary-light)] h-14 placeholder:text-[var(--secondary-dark)] p-4 text-base font-normal leading-normal"
+            value=""
+            type="text"
+            id="first_name"
+            name="first_name"
+            required
+          />
+        </label>
+
+        <label class="flex flex-col min-w-40 flex-1" for="last_name">
+          <p
+            class="text-[var(--primary-dark)] text-base font-medium leading-normal pb-2"
+          >
+            Last Name
+          </p>
+          <input
+            placeholder="Enter last name"
+            class="border border-gray-500 form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-md text-gray-900 focus:outline-0 focus:ring-0 bg-[var(--secondary-light)] h-14 placeholder:text-[var(--secondary-dark)] p-4 text-base font-normal leading-normal"
+            value=""
+            type="text"
+            id="last_name"
+            name="last_name"
+            required
+          />
+        </label>
+      </div>
+
+      <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+        <label class="flex flex-col min-w-40 flex-1" for="email">
+          <p
+            class="text-[var(--primary-dark)] text-base font-medium leading-normal pb-2"
+          >
+            Email
+          </p>
+          <input
+            placeholder="Enter email"
+            class="border border-gray-500 form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-md text-gray-900 focus:outline-0 focus:ring-0 bg-[var(--secondary-light)] h-14 placeholder:text-[var(--secondary-dark)] p-4 text-base font-normal leading-normal"
+            value=""
+            type="email"
+            id="email"
+            name="email"
+            required
+          />
+        </label>
+      </div>
+      <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+        <label class="flex flex-col min-w-40 flex-1" for="password1">
+          <p
+            class="text-[var(--primary-dark)] text-base font-medium leading-normal pb-2"
+          >
+            Password
+          </p>
+          <input
+            placeholder="Enter password"
+            class="border border-gray-500 form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-md text-gray-900 focus:outline-0 focus:ring-0 bg-[var(--secondary-light)] h-14 placeholder:text-[var(--secondary-dark)] p-4 text-base font-normal leading-normal"
+            value=""
+            type="password"
+            id="password1"
+            name="password1"
+            required
+          />
+        </label>
+      </div>
+      <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+        <label class="flex flex-col min-w-40 flex-1" for="password2">
+          <p
+            class="text-[var(--primary-dark)] text-base font-medium leading-normal pb-2"
+          >
+            Confirm Password
+          </p>
+          <input
+            placeholder="Confirm password"
+            class="border border-gray-500 form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-md text-gray-900 focus:outline-0 focus:ring-0 bg-[var(--secondary-light)] h-14 placeholder:text-[var(--secondary-dark)] p-4 text-base font-normal leading-normal"
+            value=""
+            type="password"
+            id="password2"
+            name="password2"
+            required
+          />
+        </label>
+      </div>
+      <div>
+        <div class="flex justify-center px-4 py-6">
+          <button
+            class="min-w-[150px] h-12 px-6 rounded-lg bg-[var(--primary)] text-gray-900 text-base font-bold tracking-[0.015em]"
+          >
+            <span class="truncate" rol>submit</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

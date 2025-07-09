@@ -49,12 +49,6 @@ class ProductList(ListView):
 
         return context
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     categories = Category.objects.all()
-    #     context["categories"] = categories
-    #     return context
-
 
 class ProductCreate(CreateView):
     form_class = ProductForm
@@ -93,3 +87,4 @@ class ProductDetails(DetailView):
     model = Product
     template_name = "product/details.html"
     context_object_name = "product"
+    success_url = reverse_lazy("product:details")

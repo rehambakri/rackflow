@@ -12,6 +12,21 @@
     --secondary-dark: #c5c4a9;
 }
 
+.expand-underline::before {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    height: 4px;
+    width: 0%;
+    background-color: var(--background);
+    animation: expand-line 1s forwards;
+}
+
+.pulse-text {
+    animation: pulse-text 1s infinite alternate;
+}
+
 @keyframes expand-line {
     from {
         width: 0%;
@@ -22,13 +37,12 @@
     }
 }
 
-.expand-underline::before {
-    content: "";
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    height: 4px;
-    width: 0%;
-    background-color: var(--background);
-    animation: expand-line 1s forwards;
+@keyframes pulse-text {
+    from {
+        color: #10b981;
+    }
+    
+    to {
+        color: var(--primary-dark);
+    }
 }

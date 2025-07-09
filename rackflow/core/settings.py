@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "consumer.apps.ConsumerConfig",
     "notification.apps.NotificationConfig",
+    "dashboard.apps.DashboardConfig",
 ]
 
 MIDDLEWARE = [
@@ -142,6 +143,7 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "authentication.CustomUser"
 
+<<<<<<< HEAD
 # this determines where to store global channel state (In memeory is bad)
 # use it only for developing testing as these channels are not shared
 # across processes, so only use it if you have a single worker running or
@@ -151,3 +153,7 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
+=======
+LOGIN_REDIRECT_URL = '/product'
+LOGIN_URL = '/login'
+>>>>>>> b310cc15b6dfa86afdac438b4fc8741816d8d7e1

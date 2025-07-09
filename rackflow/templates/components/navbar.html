@@ -25,7 +25,7 @@
       id="navbar-user"
     >
       <ul
-        class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-[var(--primary-light)] md:space-x-4 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
+        class="flex flex-col items-center font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-[var(--primary-light)] md:space-x-4 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
       >
         <li>
           <a
@@ -106,7 +106,7 @@
         {% endif %}
 
         <li class="nav-item">
-          <form method="post" action="">
+          <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button
               class="btn btn-link nav-link hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)]"
@@ -125,15 +125,8 @@
             >Login</a
           >
         </li>
-        <li class="nav-item">
-          <a
-            class="nav-link hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)]"
-            href=""
-            >Register</a
-          >
-        </li>
 
-        {% endif %} {% if request.user %}
+        {% endif %} {% if user.id %}
         <li class="nav-item me-2">
           {% comment %}
           <a href="{% url 'profile_update' %}">
@@ -153,6 +146,7 @@
         {% endif %}
       </ul>
     </div>
+      
   </div>
 </nav>
 
