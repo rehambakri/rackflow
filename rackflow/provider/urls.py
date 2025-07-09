@@ -6,9 +6,10 @@ from . import views
 # automatically by django if I want to referce this url it will be like thi
 # {% url product:index %}
 
-app_name = "provider"
+
 
 urlpatterns = [
-    path('shipments/', views.ShipmentList.as_view(), name='shipment_list'),
+    
     path("shipmentDetails/<int:pk>/", views.ShipmentDetails.as_view(), name="details"),
+    path("orderDetails/<int:pk>/", views.orderDetailstDetails.as_view(), name="details"),
 ]
