@@ -5,13 +5,13 @@
 <div class="flex flex-1 justify-center w-full">
   <div class="layout-content-container flex flex-col max-w-[960px] flex-1 py-4">
     <div class="flex items-center gap-4 p-4">
-      <a href="{% url 'provider:shipment_list' %}">
+      <a href="{% url 'concumer:order_list' %}">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6" viewBox="0 0 448 512">
           <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
         </svg>
       </a>
 
-      <p class="text-black text-[32px] font-bold leading-tight">Shipment Details</p>
+      <p class="text-black text-[32px] font-bold leading-tight">order Details</p>
     </div>
 
     <div class="flex flex-col p-4 gap-3">
@@ -19,31 +19,31 @@
       <p
           class="text-black text-lg font-bold leading-tight tracking-[-0.015em] p-2"
         >
-          <span class="text-[var(--primary-dark)]"> Provider : </span>
-          {{ shipment.provider.name }}
+          <span class="text-[var(--primary-dark)]"> concumer : </span>
+          {{ order.concumer.name }}
         </p>
 
 
       <p class="text-black text-lg font-bold leading-tight tracking-[-0.015em] p-2">
       <strong class="text-[var(--primary-dark)]">status : </strong>
-       {{ shipment.status }}
+       {{ order.status }}
        </p>
 
       <p class="text-black text-lg font-bold leading-tight tracking-[-0.015em] p-2">
       <strong class="text-[var(--primary-dark)]"> Created At : </strong> 
-      {{ shipment.c_date }}
+      {{ order.c_date }}
       </p>
       <p class="text-black text-lg font-bold leading-tight tracking-[-0.015em] p-2">
       <strong class="text-[var(--primary-dark)]">Accepted At : </strong> 
-      {{ shipment.a_date|default:"-" }}
+      {{ order.a_date|default:"-" }}
       </p>
       <p class="text-black text-lg font-bold leading-tight tracking-[-0.015em] p-2">
       <strong class="text-[var(--primary-dark)]">Arrived At : </strong>
-       {{ shipment.arr_date|default:"-" }}
+       {{ order.arr_date|default:"-" }}
       </p>
     </div>
 
-    <h2 class="text-[22px] font-bold px-4 p-3">Products in Shipment</h2>
+    <h2 class="text-[22px] font-bold px-4 p-3">Products in order</h2>
 
     <div class="px-4 py-3">
       <div class="overflow-hidden rounded-lg border border-[#e9e1ce] bg-[#fcfbf8]">
@@ -55,14 +55,14 @@
             </tr>
           </thead>
           <tbody>
-            {% for item in shipment.shipment_products.all %}
+            {% for item in order.order_products.all %}
             <tr class="border-t border-t-[#e9e1ce]">
               <td class="px-4 py-2 text-sm text-[var(--primary-dark)]">{{ item.product.name }}</td>
               <td class="px-4 py-2 text-sm text-[var(--primary-dark)]">{{ item.quantity }}</td>
             </tr>
             {% empty %}
             <tr>
-              <td colspan="2" class="px-4 py-3 text-center">No products found in this shipment.</td>
+              <td colspan="2" class="px-4 py-3 text-center">No products found in this order.</td>
             </tr>
             {% endfor %}
           </tbody>
