@@ -1,24 +1,5 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<div id="notifications">
-{% for notification in notifications %}
-    sent to: {{ notification.to_who }}
-    <br/>
-    Notification type: {{ notification.type }}
-    <br/>
-    content: {{ notification.content }}
-    <hr/>
-{% endfor %}
-
-</div>
+{% extends "base.html" %}
+{% block content %}
 {% endblock content %}
-{% block script %}
-<script>
-    // window.location.host may equal localhost:8000 or 127.0.0.1:8000
-    const socket = new WebSocket("ws://" + window.location.host + "/notifications/websocket/");
-    socket.onmessage = function (event){
-        div = document.getElementById("notifications")
-        
-        console.log(event)
-    };
-</script>
-{% endblock script %} 
+
+

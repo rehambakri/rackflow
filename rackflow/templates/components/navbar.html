@@ -1,4 +1,5 @@
 {% load static %}
+
 <!-- Navbar -->
 <nav class="bg-[var(--primary-light)] border-gray-200">
   <div
@@ -93,6 +94,15 @@
             >Dashboard</a
           >
         </li>
+        <!-- notification icon -->
+        <li>
+
+            <button type="button" onClick=toggleNotificationMenu() class="relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-[var(--background)] rounded-lg hover:bg-[var(--background-dark)] focus:ring-4 focus:outline-none focus:ring-blue-300">
+            <span class="material-icons text-white-400 w-6 h-5">notifications</span>
+              <div id="notificationCount" class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900"></div>
+            </button>
+        </li>
+
         {% endif %}
 
         <li class="nav-item">
@@ -145,3 +155,54 @@
     </div>
   </div>
 </nav>
+
+<!-- embed the notification socket/menu into the navbar -->
+{% if user.is_staff %}
+<div
+  id="notifications"
+  class="hidden relative mx-auto flex h-72 p-2 gap-2 max-w-sm flex-col overflow-auto rounded-xl bg-white shadow-lg ring-1 ring-black/5"
+></div>
+
+<script>
+  // window.location.host may equal localhost:8000 or 127.0.0.1:8000
+  const socket = new WebSocket(
+    "ws://" + window.location.host + "/notifications/websocket/",
+  );
+
+  // this should maniplate the DOM to add more elements when It receives data
+  // from the backend
+  socket.onmessage = function (event) {
+    const div = document.getElementById("notifications");
+    let notificationCount = document.getElementById("notificationCount");
+
+    let { type, notifications } = JSON.parse(event.data);
+
+    if (type === "notification_list") {
+      div.innerHTML = "";
+      notifications.forEach((notif) => {
+        const child = document.createElement("div");
+        child.className = "notification bg-white text-black p-2 mb-1 shadow";
+
+        child.innerText = `${notif.content}`;
+        child.className = "rounded-xl py-2 px-4 border border-[var(--background)]";
+        div.appendChild(child);
+      });
+        notificationCount.innerHTML = notifications.length.toString()
+    } else {
+      const child = document.createElement("div");
+      child.innerText = `${notifications[0]}`;
+      div.appendChild(child);
+        notificationCount.innerHTML = (parseInt(notificationCount.innerHTML) + 1).toString()
+    }
+
+    console.log(type, notifications);
+  };
+
+    function toggleNotificationMenu(){
+        let notifMenu = document.getElementById("notifications")
+        notifMenu.classList.toggle("hidden")
+      // I need to add new attribute the the notification model is seen
+
+    }
+</script>
+{% endif %}

@@ -95,6 +95,6 @@ class ChatConsumer(WebsocketConsumer):
 
         self.send(
             text_data=json.dumps(
-                {"type": "product.created", "content": notification_content}
+                {"type": "product.created", "notifications": [notification_content]}
             )
         )
