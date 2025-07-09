@@ -138,3 +138,13 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "authentication.CustomUser"
+
+# this determines where to store global channel state (In memeory is bad)
+# use it only for developing testing as these channels are not shared
+# across processes, so only use it if you have a single worker running or
+# the channels won't see each other if they are on different processes/workers.
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
