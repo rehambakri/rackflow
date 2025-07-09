@@ -5,7 +5,7 @@
 <div class="flex flex-1 justify-center w-full">
   <div class="layout-content-container flex flex-col max-w-[960px] flex-1 py-4">
     <div class="flex items-center gap-4 p-4">
-      <a href="{% url 'concumer:order_list' %}">
+      <a href="{% url 'consumer:list_orders' %}">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6" viewBox="0 0 448 512">
           <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
         </svg>
@@ -19,8 +19,8 @@
       <p
           class="text-black text-lg font-bold leading-tight tracking-[-0.015em] p-2"
         >
-          <span class="text-[var(--primary-dark)]"> concumer : </span>
-          {{ order.concumer.name }}
+          <span class="text-[var(--primary-dark)]"> consumer : </span>
+          {{ order.consumer.name }}
         </p>
 
 
@@ -37,10 +37,7 @@
       <strong class="text-[var(--primary-dark)]">Accepted At : </strong> 
       {{ order.a_date|default:"-" }}
       </p>
-      <p class="text-black text-lg font-bold leading-tight tracking-[-0.015em] p-2">
-      <strong class="text-[var(--primary-dark)]">Arrived At : </strong>
-       {{ order.arr_date|default:"-" }}
-      </p>
+     
     </div>
 
     <h2 class="text-[22px] font-bold px-4 p-3">Products in order</h2>
@@ -55,7 +52,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for item in order.order_products.all %}
+            {% for item in order.order_product.all %}
             <tr class="border-t border-t-[#e9e1ce]">
               <td class="px-4 py-2 text-sm text-[var(--primary-dark)]">{{ item.product.name }}</td>
               <td class="px-4 py-2 text-sm text-[var(--primary-dark)]">{{ item.quantity }}</td>

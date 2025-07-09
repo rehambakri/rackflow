@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from .models import ohipment , OhipmentProduct
 from django.views.generic import DetailView, ListView
 from django.db.models import Q
 from django.urls import reverse_lazy
@@ -8,8 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Order
 # Create your views here.
 
-class orderDetails(DetailView):
-    model = order
+class OrderDetails(DetailView):
+    model = Order
     template_name = "orderDetails.html"
     context_object_name = "order"
 

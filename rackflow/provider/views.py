@@ -32,4 +32,4 @@ class ShipmentDetails(DetailView):
 
 
 
-'     
+     
