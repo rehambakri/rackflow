@@ -52,7 +52,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for item in order.order_product.all %}
+            {% for item in order.order_products.all %}
             <tr class="border-t border-t-[#e9e1ce]">
               <td class="px-4 py-2 text-sm text-[var(--primary-dark)]">{{ item.product.name }}</td>
               <td class="px-4 py-2 text-sm text-[var(--primary-dark)]">{{ item.quantity }}</td>
