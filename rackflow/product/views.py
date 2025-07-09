@@ -1,7 +1,9 @@
 from asgiref.sync import async_to_sync
+from authentication.models import CustomUser
 from channels.layers import get_channel_layer
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from notification.models import Notification
 
 from .forms import ProductForm
 from .models import Category, Product
@@ -61,15 +63,25 @@ class ProductCreate(CreateView):
         response = super().form_valid(form)
 
         # send websocket a message through channel layer
+        # to notify them to start stream new data added to the database
+
+        # get manager user
+        manager = CustomUser.objects.filter(is_superuser=True).first()
+
+        # save the notification of product creation in the database
+        Notification(
+            sender=self.request.user,
+            receiver=manager,
+            product=self.object,
+            type="product_created",
+        ).save()
+
+        # notify all manager sockets to stream the latest added new notification record
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
             "manager_notification_channels",
             {
-                "type": "product.created",
-                "user_id": self.request.user.id,
-                "product_id": self.object.id,
-                "product_name": self.object.name,
-                "category_name": self.object.category.name,
+                "type": "notification.new",
             },
         )
         return response

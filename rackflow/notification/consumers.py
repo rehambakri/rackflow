@@ -45,22 +45,8 @@ class ChatConsumer(WebsocketConsumer):
         # on initial connection send all notifications to the front-end socket
         # so that it can manipluate the DOM and render all of these notifications
         notifications = Notification.objects.all()
-        data = [
-            {
-                "id": n.id,
-                "type": n.type,
-                "content": n.content,
-                "created": n.created_date_time.isoformat(),
-                # optional: stringify user
-                "to_who": str(n.to_who),
-            }
-            for n in notifications
-        ]
 
-        # here I'm specifiying a type so that the fron-end socket can
-        # distinguish between receiving an entire list of notifications when first
-        # connecting, and when it receives a single notification later on
-        self.send(json.dumps({"type": "notification_list", "notifications": data}))
+        self.send_notifications(notifications)
 
     # receive event, sent by the ASGI server when the remote sockets
     # sends data
@@ -73,28 +59,43 @@ class ChatConsumer(WebsocketConsumer):
     def receive(self, text_data):
         pass
 
-    # views/other consumers send data to this exact consumer method through the layer
-    # To do so they need to specify this channel name (this.channel_name) when sending
-    # across the layer
-    # How would they know this channel name? save it in the database (A user has one channel)
-    # and then the other views/consumers could query the channel of the manager to send
-    # it data
-    def product_created(self, event):
-        user_id = event["user_id"]
-        user_first_name = CustomUser.objects.get(id=user_id).first_name
-        user_last_name = CustomUser.objects.get(id=user_id).last_name
-        user_email = CustomUser.objects.get(id=user_id).email
-        product_id = event["product_id"]
-        product_name = event["product_name"]
-        category_name = event["category_name"]
-        notification_content = f'A new product "{product_name}" was created by {user_first_name} {user_last_name} in the {category_name} category.'
+    # this method accepts all events of type "notification.new" sent by any
+    # other consumer or view
+    def notification_new(self, event):
+        # get the latest record of the notification table
+        new_notification = Notification.objects.all().last()
+        self.send_notifications([new_notification])
 
-        Notification(
-            to_who=self.manager, type="product_created", content=notification_content
-        ).save()
+    # helper method to send data across the socket
+    def send_notifications(self, notifications):
+        # construct the message we will send to the socket
+        for notif in notifications:
+            if notif.type == "product_created":
+                content = f'A new product "{notif.product.name}" was created by {notif.sender.first_name} {notif.sender.last_name} in the {notif.product.category.name} category.'
+            elif notif.type == "product_updated":
+                content = f'product "{notif.product.name}" was updated by {notif.sender.first_name} {notif.sender.last_name}'
+            elif notif.type == "product_deleted":
+                content = f'product "{notif.product.name}" was deleted by {notif.sender.first_name} {notif.sender.last_name}'
+            elif notif.type == "order_created":
+                content = f'A new order to "{notif.order.consumer.name}" which has {notif.order.quantity} products was created by {notif.sender.first_name} {notif.sender.last_name}'
+            elif notif.type == "shipment_created":
+                content = f'A new shipment from "{notif.shipment.provider.name}" which has {notif.shipment.quantity} products was created by {notif.sender.first_name} {notif.sender.last_name}'
+            notif._content = content
 
-        self.send(
-            text_data=json.dumps(
-                {"type": "product.created", "notifications": [notification_content]}
-            )
-        )
+        # construct the entire array of notification objects we will send
+        data = [
+            {
+                "type": n.type,
+                "sender_id": n.sender.id,
+                "receiver_id": n.receiver.id,
+                "product_id": getattr(n.product, "id", None),
+                "shipment_id": getattr(n.shipment, "id", None),
+                "order_id": getattr(n.order, "id", None),
+                "created_date_time": n.created_date_time.isoformat(),
+                "content": getattr(n, "_content", ""),
+            }
+            for n in notifications
+        ]
+
+        # send it
+        self.send(json.dumps(data))

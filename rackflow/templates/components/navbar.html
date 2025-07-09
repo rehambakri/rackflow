@@ -158,45 +158,37 @@
 ></div>
 
 <script>
-  // window.location.host may equal localhost:8000 or 127.0.0.1:8000
-  const socket = new WebSocket(
+// window.location.host may equal localhost:8000 or 127.0.0.1:8000
+const socket = new WebSocket(
     "ws://" + window.location.host + "/notifications/websocket/",
-  );
+);
 
-  // this should maniplate the DOM to add more elements when It receives data
-  // from the backend
-  socket.onmessage = function (event) {
+// this should maniplate the DOM to add more elements when It receives data
+// from the backend
+socket.onmessage = function (event) {
     const div = document.getElementById("notifications");
     let notificationCount = document.getElementById("notificationCount");
+    // data is an array of objects
+    let data = JSON.parse(event.data);
 
-    let { type, notifications } = JSON.parse(event.data);
-
-    if (type === "notification_list") {
-      div.innerHTML = "";
-      notifications.forEach((notif) => {
+    notificationCount.innerHtml = data.length
+    data.forEach((notification)=> {
+        if(notification.type == "product_created"){
+            console.log(notification)
+        }
         const child = document.createElement("div");
-        child.className = "notification bg-white text-black p-2 mb-1 shadow";
-
-        child.innerText = `${notif.content}`;
         child.className = "rounded-xl py-2 px-4 border border-[var(--background)]";
+        child.innerText = `${notification.content}`;
         div.appendChild(child);
-      });
-        notificationCount.innerHTML = notifications.length.toString()
-    } else {
-      const child = document.createElement("div");
-      child.innerText = `${notifications[0]}`;
-      div.appendChild(child);
-        notificationCount.innerHTML = (parseInt(notificationCount.innerHTML) + 1).toString()
-    }
+    })
 
-    console.log(type, notifications);
-  };
+};
 
-    function toggleNotificationMenu(){
-        let notifMenu = document.getElementById("notifications")
-        notifMenu.classList.toggle("hidden")
-      // I need to add new attribute the the notification model is seen
+function toggleNotificationMenu(){
+    let notifMenu = document.getElementById("notifications")
+    notifMenu.classList.toggle("hidden")
+    // I need to add new attribute the the notification model is seen
 
-    }
+}
 </script>
 {% endif %}

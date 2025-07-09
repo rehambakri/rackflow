@@ -1,14 +1,11 @@
 from authentication.models import CustomUser
+from consumer.models import Order
 from django.db import models
+from product.models import Product
+from provider.models import Shipment
 
 
 class Notification(models.Model):
-    # I named it to_who, in case we want to implement broadcasting the same
-    # notifications to multiple users, which in this case will have another
-    # property called from_who. But right now only the manage will get
-    # notifications so no need to that yet
-    # Don't delete past notification from user just because it was deleted (RESTRICT)
-
     CHOICES = [
         ("product_created", "Product Created Notification"),
         ("product_deleted", "Product Deleted Notification"),
@@ -17,10 +14,41 @@ class Notification(models.Model):
         ("shipment_created", "Shipment Created Notification"),
     ]
 
-    to_who = models.ForeignKey(
+    sender = models.ForeignKey(
         CustomUser,
         null=False,
         blank=False,
+        on_delete=models.RESTRICT,
+        related_name="sender",
+    )
+
+    # Don't delete past notification from user just because it was deleted (RESTRICT)
+    receiver = models.ForeignKey(
+        CustomUser,
+        null=False,
+        blank=False,
+        on_delete=models.RESTRICT,
+        related_name="reciever",
+    )
+
+    # Don't delete past notifications of a product just because it was deleted (RESTRICT)
+    product = models.ForeignKey(
+        Product,
+        null=True,
+        on_delete=models.RESTRICT,
+        related_name="notifications",
+    )
+
+    order = models.ForeignKey(
+        Order,
+        null=True,
+        on_delete=models.RESTRICT,
+        related_name="notifications",
+    )
+
+    shipment = models.ForeignKey(
+        Shipment,
+        null=True,
         on_delete=models.RESTRICT,
         related_name="notifications",
     )
@@ -34,9 +62,6 @@ class Notification(models.Model):
     )
 
     created_date_time = models.DateTimeField(auto_now_add=True, null=False, blank=False)
-    # we need to save the content into the database to reterieve it later if
-    # the socket reconnects...
-    content = models.TextField(null=False, blank=False)
 
     class Meta:
         db_table = "notifications"

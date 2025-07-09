@@ -1,6 +1,7 @@
+from authentication.models import CustomUser
 from django.db import models
 from product.models import Product
-from authentication.models import CustomUser
+
 
 class Provider(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
@@ -15,7 +16,7 @@ class Provider(models.Model):
 
 
 class Shipment(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,default=1)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=1)
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("accepted", "Accepted"),
@@ -44,6 +45,11 @@ class Shipment(models.Model):
         through="ShipmentProduct",
         related_name="shipments",
     )
+
+    @property
+    def quantity(self):
+        result = self.shipment_products.aggregate(total=Sum("quantity"))
+        return result["total"] or 0
 
     class Meta:
         db_table = "shipments"
