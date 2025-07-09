@@ -1,10 +1,15 @@
 from django.shortcuts import render
-from django.views.generic import ListView
-from .models import Shipment
+from .models import Shipment , ShipmentProduct
+from django.db.models import Q
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView, UpdateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-
 # Create your views here.
+
+class ShipmentDetails(DetailView):
+    model = Shipment
+    template_name = "shipmentDetails.html"
+    context_object_name = "shipment"
 
 
 class ListShipmentView(LoginRequiredMixin,ListView):
@@ -18,3 +23,13 @@ class ListShipmentView(LoginRequiredMixin,ListView):
             return Shipment.objects.all()
         return Shipment.objects.filter(user=user)
 
+
+class ShipmentDetails(DetailView):
+    model = Shipment
+    template_name = "shipmentDetails.html"
+    context_object_name = "shipment"
+
+
+
+
+     
