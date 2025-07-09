@@ -26,9 +26,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("product/", include("product.urls")),
     path("notification/", include("notification.urls")),
-    path("", include("authentication.urls")),
-    path("dashboard/", include("dashboard.urls")),
     path("logout/", auth_views.LogoutView.as_view(next_page="login"), name="logout"),
     path("consumer/", include("consumer.urls")),
     path("provider/", include("provider.urls")),
+    path("", include("authentication.urls")),
+    path("dashboard/", include("dashboard.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
