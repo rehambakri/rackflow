@@ -31,6 +31,8 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "channels",
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     "provider.apps.ProviderConfig",
     "django_extensions",
     "consumer.apps.ConsumerConfig",
+    "notification.apps.NotificationConfig",
     "dashboard.apps.DashboardConfig",
 ]
 
@@ -73,6 +76,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
+ASGI_APPLICATION = "core.asgi.application"
 
 
 # Database
@@ -139,5 +143,14 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "authentication.CustomUser"
 
-LOGIN_REDIRECT_URL = '/product'
-LOGIN_URL = '/login'
+# this determines where to store global channel state (In memeory is bad)
+# use it only for developing testing as these channels are not shared
+# across processes, so only use it if you have a single worker running or
+# the channels won't see each other if they are on different processes/workers.
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
+LOGIN_REDIRECT_URL = "/product"
+LOGIN_URL = "/login"

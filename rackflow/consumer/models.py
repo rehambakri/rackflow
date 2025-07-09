@@ -1,8 +1,9 @@
+from authentication.models import CustomUser
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from product.models import Product, ProductDetails
-from authentication.models import CustomUser
+
 # Create your models here.
 
 
@@ -40,6 +41,11 @@ class Order(models.Model):
         Product, through="OrderProduct", related_name="orders"
     )
 
+    @property
+    def quantity(self):
+        result = self.order_products.aggregate(total=Sum("quantity"))
+        return result["total"] or 0
+
     """ def change_status(self, new_status):
         self.status = new_status
         if self.status == "accepted" and self.a_date is None:
@@ -75,7 +81,7 @@ class Order(models.Model):
 class OrderProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.ForeignKey(
-        Order, on_delete=models.CASCADE, related_name="order_product"
+        Order, on_delete=models.CASCADE, related_name="order_products"
     )
     quantity = models.PositiveIntegerField(default=1)
 

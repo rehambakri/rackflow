@@ -1,20 +1,19 @@
-from django.shortcuts import render
-from django.views.generic import ListView
-from django.db.models import Q
+from asgiref.sync import async_to_sync
+from authentication.models import CustomUser
+from channels.layers import get_channel_layer
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, UpdateView, DetailView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from notification.models import Notification
 
 from .forms import ProductForm
-
-# Create your views here.
-from .models import Product , Category
+from .models import Category, Product
 
 
 class ProductList(ListView):
     model = Product
     template_name = "product/index.html"
     context_object_name = "products"
-    paginate_by= 10 
+    paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -36,7 +35,6 @@ class ProductList(ListView):
         if params["items"] and params["items"].isdigit():
             self.paginate_by = int(params["items"])
 
-        
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -52,7 +50,6 @@ class ProductList(ListView):
         }
 
         return context
-    
 
 
 class ProductCreate(CreateView):
@@ -61,6 +58,33 @@ class ProductCreate(CreateView):
     template_name = "product/create.html"
     context_object_name = "products"
     success_url = reverse_lazy("product:list")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        # send websocket a message through channel layer
+        # to notify them to start stream new data added to the database
+
+        # get manager user
+        manager = CustomUser.objects.filter(is_superuser=True).first()
+
+        # save the notification of product creation in the database
+        Notification(
+            sender=self.request.user,
+            receiver=manager,
+            product=self.object,
+            type="product_created",
+        ).save()
+
+        # notify all manager sockets to stream the latest added new notification record
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "manager_notification_channels",
+            {
+                "type": "notification.new",
+            },
+        )
+        return response
 
 
 class ProductUpdate(UpdateView):
@@ -76,4 +100,3 @@ class ProductDetails(DetailView):
     template_name = "product/details.html"
     context_object_name = "product"
     success_url = reverse_lazy("product:details")
-
