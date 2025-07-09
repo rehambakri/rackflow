@@ -1,10 +1,16 @@
 from django.shortcuts import render
-from django.views.generic import ListView
-from .models import Order
+from django.views.generic import DetailView, ListView
+from django.db.models import Q
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView, UpdateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-
+from .models import Order
 # Create your views here.
+
+class OrderDetails(DetailView):
+    model = Order
+    template_name = "orderDetails.html"
+    context_object_name = "order"
 
 
 class ListOrderView(LoginRequiredMixin,ListView):
