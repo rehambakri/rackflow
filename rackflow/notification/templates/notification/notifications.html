@@ -1,12 +1,16 @@
 {% extends "base.html" %} {% load static %} {% block content %}
 <div id="notifications">
-  {% for notification in notifications %} {{ notification.user }} {{
-  notification.content }} {{ notification.type }}
-  <hr />
-  {% endfor %}
+{% for notification in notifications %}
+    sent to: {{ notification.to_who }}
+    <br/>
+    Notification type: {{ notification.type }}
+    <br/>
+    content: {{ notification.content }}
+    <hr/>
+{% endfor %}
+
 </div>
 {% endblock content %}
-
 {% block script %}
 <script>
     // window.location.host may equal localhost:8000 or 127.0.0.1:8000
