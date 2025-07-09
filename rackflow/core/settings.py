@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "consumer.apps.ConsumerConfig",
     "notification.apps.NotificationConfig",
+    "dashboard.apps.DashboardConfig",
 ]
 
 MIDDLEWARE = [

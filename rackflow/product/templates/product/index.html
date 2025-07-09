@@ -1,96 +1,101 @@
-{% extends "base.html" %} {% load static %}
-  {% block content %}
-  <div class="container mx-auto p-6 md:p-8">
-    <header class="flex flex-col sm:flex-row justify-between items-center mb-8">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-800">Product List</h1>
-      </div>
-        <a href="{% url 'product:create'%}"
-        class="mt-4 sm:mt-0 bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm flex items-center">
+{% extends "base.html" %}
+{% load static %}
 
+{% block content %}
+<div class="container mx-auto p-6 md:p-8">
+
+  <!-- Header -->
+  <header class="flex flex-col sm:flex-row justify-between items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-800">Product List</h1>
+    </div>
+    <a href="{% url 'product:create' %}" class="mt-4 sm:mt-0 bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm flex items-center">
       <span class="material-icons mr-2">add_circle_outline</span>
-      
-            Add product
+      Add product
     </a>
-    </header>
-    
-    <form method="get" id="category-filter">
-      <div class="mb-5">
-        <div class="bg-white p-4 rounded-lg shadow-sm">
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-            <!-- Category Filter -->
-            <div class="md:col-span-3">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-              <select name="category" class="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary-dark)] focus:border-[var(--primary-dark)]">
-                <option value="">All Categories</option>
-                {% for category in categories %}
-                <option value="{{category.name}}" {% if category.name == current_filters.category_query %}selected{% endif %}>{{category.name}}</option>
-                {% endfor %}
-              </select>
-            </div>
-            
-            <!-- Items per Page -->
-            <div class="md:col-span-3">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Items per page</label>
-              <select name="items" class="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary-dark)] focus:border-[var(--primary-dark)]">
-                <option value="10" {% if current_filters.items_query == 10 %}selected{% endif %}>Ten items</option>
-                <option value="20" {% if current_filters.items_query == 20 %}selected{% endif %}>Twenty items</option>
-                <option value="30" {% if current_filters.items_query == 30 %}selected{% endif %}>Therty items</option>
-              </select>
-            </div>
-            
-            <!-- Search Input -->
-            <div class="md:col-span-3">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
-              <div class="relative">
-                <span class="material-icons absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">search</span>
-                <input
-                  name="search"
-                  value="{{ current_search }}"
-                  class="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary-dark)] focus:border-[var(--primary-dark)]"
-                  placeholder="Search..."
-                  type="text"
-                />
-              </div>
-            </div>
-            
-            <!-- Apply Button -->
-            <div class="md:col-span-2 row-end">
-              <button 
-                type="submit"
-                class="w-full bg-[var(--primary)] hover:bg-[var(--primary-dark)] text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors duration-200"
-              >
-                Apply
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
+  </header>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-      {% for product in products %}
+  <!-- Filter Form -->
+  <form method="get" id="category-filter">
+    <div class="mb-5">
+      <div class="bg-white p-4 rounded-lg shadow-sm">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+          
+          <!-- Category Filter -->
+          <div class="md:col-span-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <select name="category" class="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary-dark)] focus:border-[var(--primary-dark)]">
+              <option value="">All Categories</option>
+              {% for category in categories %}
+                <option value="{{ category.name }}" {% if category.name == current_filters.category_query %}selected{% endif %}>
+                  {{ category.name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Items per Page -->
+          <div class="md:col-span-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Items per page</label>
+            <select name="items" class="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary-dark)] focus:border-[var(--primary-dark)]">
+              <option value="10" {% if current_filters.items_query == 10 %}selected{% endif %}>Ten items</option>
+              <option value="20" {% if current_filters.items_query == 20 %}selected{% endif %}>Twenty items</option>
+              <option value="30" {% if current_filters.items_query == 30 %}selected{% endif %}>Thirty items</option> 
+            </select>
+          </div>
+
+          <!-- Search Input -->
+          <div class="md:col-span-3">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+            <div class="relative">
+              <span class="material-icons absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">search</span>
+              <input
+                name="search"
+                value="{{ current_search }}"
+                class="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pl-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--primary-dark)] focus:border-[var(--primary-dark)]"
+                placeholder="Search..."
+                type="text"
+              />
+            </div>
+          </div>
+
+          <!-- Apply Button -->
+          <div class="md:col-span-2 row-end">
+            <button type="submit" class="w-full bg-[var(--primary)] hover:bg-[var(--primary-dark)] text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors duration-200">
+              Apply
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Product Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    {% for product in products %}
       <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-        <img
-          alt="{{ product.name }}"
-          class="w-full h-48 object-cover"
-          src="{% static 'images/product_placeholder.png' %}"
-        />
-        <div class="p-5">
-          <h3 class="text-lg font-semibold text-gray-800 mb-1 truncate">
-            {{ product.name }}
-          </h3>
-          <p class="text-sm text-gray-500 mb-3">{{ product.category }}</p>
-          <div class="flex justify-between items-center mb-3">
-            <p class="text-xl font-bold text-gray-800">{{ product.quantity }} in stock</p>
-            <span class="text-sm px-2 py-1 rounded-full {% if product.quantity > 10 %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
-              {% if product.quantity > 10 %}In Stock{% else %}Low Stock{% endif %}
-            </span>
+        <a href="{% url 'product:details' product.id %}">
+          <img alt="{{ product.name }}" class="w-full h-48 object-cover" src="{{ product.image.url }}" />
+          <div class="p-5">
+              <h3 class="text-lg font-semibold text-gray-800 mb-1 truncate">{{ product.name }}</h3>
+              <p class="text-sm text-gray-500 mb-3">{{ product.category }}</p>
+              <div class="flex justify-between items-center mb-3">
+                  <p class="text-xl font-bold text-gray-800">{{ product.quantity }} in stock</p>
+                  <span class="text-sm px-2 py-1 rounded-full {% if product.quantity > 10 %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                      {% if product.quantity > 10 %}In Stock{% else %}Low Stock{% endif %}
+                    </span>
+                </div>
+            </a>
+          <div class="m-auto">
+            <a href="{% url 'product:update' product.id %}" class="mt-4 sm:mt-0 bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm flex items-center">
+              <span class="material-icons mr-2">edit</span>
+              Edit product
+            </a>
           </div>
         </div>
-        
       </div>
-      {% empty %}
+    {% empty %}
       <div class="col-span-full text-center py-12">
         <div class="text-gray-400 mb-4">
           <span class="material-icons text-6xl">inventory_2</span>
@@ -98,11 +103,13 @@
         <h3 class="text-xl font-medium text-gray-600 mb-2">No products found</h3>
         <p class="text-gray-500">Try adjusting your search or filter criteria</p>
       </div>
-      {% endfor %}
-    </div>
+    {% endfor %}
+  </div>
 
-    {% if products %}
+  <!-- Pagination -->
+  {% if products %}
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 text-sm text-gray-600">
+      
       <!-- Items count -->
       <div class="flex items-center">
         <span>Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }} items</span>
@@ -111,59 +118,61 @@
       <!-- Pagination controls -->
       <nav aria-label="Page navigation">
         <ul class="flex items-center space-x-1">
-            {# Previous Button #}
 
+          <!-- Previous Button -->
           <li class="{% if not page_obj.has_previous %}opacity-50 pointer-events-none{% endif %}">
-  <a 
-    href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% if current_filters.search_query %}&search={{ current_filters.search_query|urlencode }}{% endif %}{% if current_filters.category_query %}&category={{ current_filters.category_query|urlencode }}{% endif %}{% if current_filters.items_query %}&items={{ current_filters.items_query }}{% endif %}{% endif %}"
-    class="flex items-center justify-center p-2 rounded-md hover:bg-gray-200 transition-colors"
-    aria-label="Previous page"
-    {% if not page_obj.has_previous %}aria-disabled="true" tabindex="-1"{% endif %}
-  >
-    <span class="material-icons">chevron_left</span>
-  </a>
-</li>
-  {% for num in page_obj.paginator.page_range %}
-      {% if page_obj.number == num %}
-        <li class="page-item active" aria-current="page">
-          <span class= "flex items-center justify-center w-10 h-10 rounded-md transition-colors {% if page_obj.number == num %}bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)]{% else %}hover:bg-gray-200{% endif %}">
-            {% if num == 1 %}{{ num }}{% elif num == page_obj.paginator.num_pages %}{{ num }}{% else %}{{ num }}{% endif %}</span>
-        </li>
-      {% else %}
-        {% if num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' or num == 1 or num == page_obj.paginator.num_pages %}
-          <li class="page-item">
-            <a
-            class="flex items-center justify-center w-10 h-10 rounded-md transition-colors {% if page_obj.number == num %}bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)]{% else %}hover:bg-gray-200{% endif %}"
-            href="?page={{ num }}&search={{current_filters.search_query}}&items={{current_filters.items_query}}&category={{current_filters.category_query}}"
-            aria-current="{% if page_obj.number == num %}page{% endif %}">
-            {% if num == 1 %}{{ num }}{% elif num == page_obj.paginator.num_pages %}{{ num }}{% else %}{{ num }}{% endif %}
-        </a>
-            
-        </li>
-        {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
-          <li class="page-item disabled">
-            <span class="page-link text-muted">...</span>
+            <a 
+              href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% if current_filters.search_query %}&search={{ current_filters.search_query|urlencode }}{% endif %}{% if current_filters.category_query %}&category={{ current_filters.category_query|urlencode }}{% endif %}{% if current_filters.items_query %}&items={{ current_filters.items_query }}{% endif %}{% endif %}"
+              class="flex items-center justify-center p-2 rounded-md hover:bg-gray-200 transition-colors"
+              aria-label="Previous page"
+              {% if not page_obj.has_previous %}aria-disabled="true" tabindex="-1"{% endif %}
+            >
+              <span class="material-icons">chevron_left</span>
+            </a>
           </li>
-        {% endif %}
-      {% endif %}
-    {% endfor %}
 
-         <li class="{% if not page_obj.has_next %}opacity-50 pointer-events-none{% endif %}">
-  <a 
-    href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% if current_filters.search_query %}&search={{ current_filters.search_query|urlencode }}{% endif %}{% if current_filters.category_query %}&category={{ current_filters.category_query|urlencode }}{% endif %}{% if current_filters.items_query %}&items={{ current_filters.items_query }}{% endif %}{% endif %}"
-    class="flex items-center justify-center p-2 rounded-md hover:bg-gray-200 transition-colors"
-    aria-label="Next page"
-    {% if not page_obj.has_next %}aria-disabled="true" tabindex="-1"{% endif %}
-  >
-    <span class="material-icons">chevron_right</span>
-    <span class="sr-only">Next</span>
-  </a>
-</li>
+          <!-- Page Numbers -->
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+              <li class="page-item active" aria-current="page">
+                <span class="flex items-center justify-center w-10 h-10 rounded-md transition-colors bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)]">
+                  {{ num }}
+                </span>
+              </li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' or num == 1 or num == page_obj.paginator.num_pages %}
+              <li class="page-item">
+                <a
+                  class="flex items-center justify-center w-10 h-10 rounded-md transition-colors hover:bg-gray-200"
+                  href="?page={{ num }}&search={{ current_filters.search_query }}&items={{ current_filters.items_query }}&category={{ current_filters.category_query }}"
+                  aria-current="{% if page_obj.number == num %}page{% endif %}"
+                >
+                  {{ num }}
+                </a>
+              </li>
+            {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+              <li class="page-item disabled">
+                <span class="page-link text-muted">...</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          <!-- Next Button -->
+          <li class="{% if not page_obj.has_next %}opacity-50 pointer-events-none{% endif %}">
+            <a 
+              href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% if current_filters.search_query %}&search={{ current_filters.search_query|urlencode }}{% endif %}{% if current_filters.category_query %}&category={{ current_filters.category_query|urlencode }}{% endif %}{% if current_filters.items_query %}&items={{ current_filters.items_query }}{% endif %}{% endif %}"
+              class="flex items-center justify-center p-2 rounded-md hover:bg-gray-200 transition-colors"
+              aria-label="Next page"
+              {% if not page_obj.has_next %}aria-disabled="true" tabindex="-1"{% endif %}
+            >
+              <span class="material-icons">chevron_right</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
 
         </ul>
       </nav>
-
     </div>
-    {% endif %}
-  </div>
-  {% endblock %}
+  {% endif %}
+
+</div>
+{% endblock %}
