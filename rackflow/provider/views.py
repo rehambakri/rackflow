@@ -12,10 +12,7 @@ class ShipmentDetails(DetailView):
     template_name = "shipmentDetails.html"
     context_object_name = "shipment"
 
-class orderDetails(DetailView):
-    model = order
-    template_name = "orderDetails.html"
-    context_object_name = "order"
+
 
 
 '     
