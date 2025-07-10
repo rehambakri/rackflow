@@ -38,9 +38,9 @@ def toggle_user_status(request, pk):
 
     try:
         profile = get_object_or_404(CustomUser, pk=pk)
-        profile.user_status = not profile.user_status
+        profile.is_active = not profile.is_active
         profile.save()
-        return JsonResponse({'success': True, 'new_status': profile.user_status, 'message': 'User status updated successfully.'})
+        return JsonResponse({'success': True, 'new_status': profile.is_active, 'message': 'User status updated successfully.'})
     except CustomUser.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'Profile not found.'}, status=404)
     except Exception as e:

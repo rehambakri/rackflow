@@ -28,26 +28,26 @@
             <div class="mt-6 flex items-center justify-center">
                 <span class="font-semibold text-gray-700 mr-2">Account Status:</span>
                 <span id="user-status-display" class="font-bold text-lg flex items-center
-                    {% if profile.user_status %}text-green-600{% else %}text-red-600{% endif %}">
+                    {% if profile.is_active %}text-green-600{% else %}text-red-600{% endif %}">
                     <span class="material-icons text-xl mr-1">
-                        {% if profile.user_status %}check_circle{% else %}cancel{% endif %}
+                        {% if profile.is_active %}check_circle{% else %}cancel{% endif %}
                     </span>
-                    {% if profile.user_status %}Active{% else %}Inactive{% endif %}
+                    {% if profile.is_active %}Active{% else %}Inactive{% endif %}
                 </span>
             </div>
 
                 <div class="mt-4">
                     <button id="toggle-status-btn"
                             data-profile-id="{{ profile.pk }}"
-                            data-current-status="{{ profile.user_status|lower }}"
+                            data-current-status="{{ profile.is_active|lower }}"
                             class="px-6 py-2.5 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-300 ease-in-out shadow-md flex items-center justify-center mx-auto
-                                   {% if profile.user_status %}bg-red-500 hover:bg-red-600 text-white focus:ring-red-500{% else %}bg-green-500 hover:bg-green-600 text-white focus:ring-green-500{% endif %}">
+                                   {% if profile.is_active %}bg-red-500 hover:bg-red-600 text-white focus:ring-red-500{% else %}bg-green-500 hover:bg-green-600 text-white focus:ring-green-500{% endif %}">
                         <span id="button-spinner" class="spinner hidden"></span>
                         <span id="button-icon" class="material-icons mr-2">
-                            {% if profile.user_status %}lock{% else %}lock_open{% endif %}
+                            {% if profile.is_active %}lock{% else %}lock_open{% endif %}
                         </span>
                         <span id="button-text">
-                            {% if profile.user_status %}Deactivate User{% else %}Activate User{% endif %}
+                            {% if profile.is_active %}Deactivate User{% else %}Activate User{% endif %}
                         </span>
                     </button>
                     <div id="status-message" class="mt-2 text-center text-sm font-medium"></div>
@@ -56,6 +56,7 @@
 
         {# Profile Update Form #}
         <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Update Information</h3>
+        {{form.errors}}
         {{ form.non_field_errors }}
         <form id="profileUpdateForm" class="space-y-6" method="post" enctype="multipart/form-data">
             {% csrf_token %}
