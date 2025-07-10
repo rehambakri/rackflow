@@ -38,6 +38,7 @@ class CustomUser(AbstractUser):
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True,default="profile_images/placeholder.jpg")
     first_name = models.CharField(max_length=30, blank=False, null=False)
     last_name = models.CharField(max_length=30, blank=False, null=False)
+    user_status = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name'] # These fields will be prompted when creating a superuser

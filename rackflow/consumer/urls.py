@@ -1,4 +1,5 @@
 from django.urls import path
+
 from . import views
 
 # This is used to establish a namespce.
@@ -9,8 +10,8 @@ from . import views
 app_name = "consumer"
 
 urlpatterns = [
-    
     path("orderDetails/<int:pk>/", views.OrderDetails.as_view(), name="details"),
     path('orders/', views.ListOrderView.as_view(), name='list_orders'),
     path('orders/create/', views.OrderCreateView.as_view(), name='create_order'),
+    path("api/orders/<int:id>/status/", views.update_order_status),
 ]
