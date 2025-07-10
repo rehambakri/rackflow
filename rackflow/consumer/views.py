@@ -13,7 +13,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import Response
 
-from .models import Order
+from .models import Order, Consumer
 
 from django.views.generic import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -21,6 +21,9 @@ from django.urls import reverse_lazy
 from django.db import transaction # For atomic operations
 
 from .forms import OrderForm, OrderProductFormSet
+
+
+# Create your views here.
 class OrderDetails(DetailView):
     model = Order
     template_name = "consumer/orderDetails.html"
@@ -136,3 +139,17 @@ def update_order_status(request, id):
         },
     )
     return Response({"detail": f"Order status updated to {new_status}."})
+
+
+
+
+class ListConsumerView(LoginRequiredMixin, ListView):
+    model = Consumer
+    template_name = "consumer/list_consumers.html"
+    context_object_name = "consumers"
+
+    def get_queryset(self):
+        user  = self.request.user
+        if user.is_superuser:
+            return Consumer.objects.all()
+        return Consumer.objects.filter(user=user)
