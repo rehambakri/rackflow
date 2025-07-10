@@ -6,12 +6,17 @@ from .models import CustomUser
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('email', 'first_name', 'last_name') # Add other fields as needed
+        fields = ('email', 'first_name', 'last_name' ) # Add other fields as needed
 
 class CustomUserProfileUpdateForm(forms.ModelForm):
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        required=False,
+        help_text="Leave blank if you don't want to change the password."
+    )
     class Meta:
         model = CustomUser
-        fields = ['first_name', 'last_name', 'profile_image'] # Fields the user can update
+        fields = ['first_name', 'last_name' , 'email' ,  'profile_image'  ] # Fields the user can update
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

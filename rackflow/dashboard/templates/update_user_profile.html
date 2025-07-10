@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block content %}
 <main class="flex-1 container mx-auto px-4 sm:px-6 py-8">
     <div
@@ -13,7 +12,50 @@
         </h2>
     </div>
 
-    <div class="bg-white p-8 rounded-xl shadow-lg">
+    <div class="bg-white p-8 rounded-xl shadow-lg max-w-2xl mx-auto">
+
+        <div class="text-center mb-8 pb-8 border-b border-gray-200">
+            {% if profile.profile_image.url %}
+                <img src="{{ profile.profile_image.url }}" alt="{{ profile.user.username }}'s Profile Picture"
+                     class="w-28 h-28 rounded-full mx-auto object-cover border-4 border-gray-300 shadow-lg mb-4">
+            {% else %}
+                <div class="w-28 h-28 rounded-full mx-auto bg-gray-200 flex items-center justify-center text-gray-500 text-7xl mb-4 border-4 border-gray-300 shadow-lg">
+                    <span class="material-icons">person</span>
+                </div>
+            {% endif %}
+            <h1 class="text-3xl font-bold text-gray-800 mt-2">{{ profile.first_name }} </h1>
+
+            <div class="mt-6 flex items-center justify-center">
+                <span class="font-semibold text-gray-700 mr-2">Account Status:</span>
+                <span id="user-status-display" class="font-bold text-lg flex items-center
+                    {% if profile.user_status %}text-green-600{% else %}text-red-600{% endif %}">
+                    <span class="material-icons text-xl mr-1">
+                        {% if profile.user_status %}check_circle{% else %}cancel{% endif %}
+                    </span>
+                    {% if profile.user_status %}Active{% else %}Inactive{% endif %}
+                </span>
+            </div>
+
+                <div class="mt-4">
+                    <button id="toggle-status-btn"
+                            data-profile-id="{{ profile.pk }}"
+                            data-current-status="{{ profile.user_status|lower }}"
+                            class="px-6 py-2.5 rounded-lg text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-300 ease-in-out shadow-md flex items-center justify-center mx-auto
+                                   {% if profile.user_status %}bg-red-500 hover:bg-red-600 text-white focus:ring-red-500{% else %}bg-green-500 hover:bg-green-600 text-white focus:ring-green-500{% endif %}">
+                        <span id="button-spinner" class="spinner hidden"></span>
+                        <span id="button-icon" class="material-icons mr-2">
+                            {% if profile.user_status %}lock{% else %}lock_open{% endif %}
+                        </span>
+                        <span id="button-text">
+                            {% if profile.user_status %}Deactivate User{% else %}Activate User{% endif %}
+                        </span>
+                    </button>
+                    <div id="status-message" class="mt-2 text-center text-sm font-medium"></div>
+                </div>
+        </div>
+
+        {# Profile Update Form #}
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Update Information</h3>
         {{ form.non_field_errors }}
         <form id="profileUpdateForm" class="space-y-6" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -95,7 +137,7 @@
             <div class="pt-4 flex justify-end space-x-3">
                 <a
                     class="px-6 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--background)]"
-                    {% comment %} href="{% url 'dashboard' %}" {# this will be active after finishing list users route #} {% endcomment %}
+                    {% comment %} href="{% url 'dashboard:update_user_profile' pk=profile.pk %}" {# Stays on the same page #} {% endcomment %}
                 >
                     Cancel
                 </a>
@@ -103,13 +145,142 @@
                     class="px-6 py-2.5 bg-[var(--background)] text-white rounded-lg text-sm font-medium hover:bg-[var(--background-dark)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--background)]"
                     type="submit"
                 >
-                    Save Changes {# Changed button text #}
+                    Save Changes
                 </button>
             </div>
         </form>
     </div>
 </main>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.querySelector('input[type="file"]');
+        const imagePreview = document.getElementById('image-preview');
+        const imagePlaceholder = document.getElementById('image-placeholder');
 
+        // Initial check for existing image
+        if (imagePreview && imagePreview.src && imagePreview.src.includes('/media/')) {
+            imagePreview.style.display = 'block';
+            imagePlaceholder.style.display = 'none';
+        } else if (imagePlaceholder) {
+            imagePreview.style.display = 'none';
+            imagePlaceholder.style.display = 'block';
+        }
+
+        if (fileInput) {
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (imagePreview) {
+                            imagePreview.src = e.target.result;
+                            imagePreview.style.display = 'block';
+                        }
+                        if (imagePlaceholder) {
+                            imagePlaceholder.style.display = 'none';
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // If no file selected, revert to placeholder or existing image
+                    if (imagePreview && imagePreview.src && imagePreview.src.includes('/media/')) {
+                        imagePreview.style.display = 'block';
+                        if (imagePlaceholder) imagePlaceholder.style.display = 'none';
+                    } else {
+                        if (imagePreview) imagePreview.style.display = 'none';
+                        if (imagePlaceholder) imagePlaceholder.style.display = 'block';
+                    }
+                }
+            });
+        }
+
+        // --- Status Toggle Button Logic ---
+        const toggleButton = document.getElementById('toggle-status-btn');
+        const userStatusDisplay = document.getElementById('user-status-display');
+        const buttonText = document.getElementById('button-text');
+        const buttonIcon = document.getElementById('button-icon');
+        const buttonSpinner = document.getElementById('button-spinner');
+        const statusMessageDiv = document.getElementById('status-message');
+
+        if (toggleButton) {
+            toggleButton.addEventListener('click', async function() {
+                const profileId = this.dataset.profileId;
+                console.log(profileId)
+                let currentStatus = this.dataset.currentStatus === 'true'; // Convert string to boolean
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                // Disable button and show spinner
+                toggleButton.disabled = true;
+                buttonText.classList.add('hidden');
+                buttonIcon.classList.add('hidden');
+                buttonSpinner.classList.remove('hidden');
+                statusMessageDiv.textContent = ''; // Clear previous messages
+
+                try {
+                    const response = await fetch(`/dashboard/profile/${profileId}/toggle_status/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: JSON.stringify({})
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        const newStatus = data.new_status;
+
+                        // Update UI elements
+                        userStatusDisplay.textContent = newStatus ? 'Active' : 'Inactive';
+                        userStatusDisplay.classList.toggle('text-green-600', newStatus);
+                        userStatusDisplay.classList.toggle('text-red-600', !newStatus);
+                        userStatusDisplay.querySelector('.material-icons').textContent = newStatus ? 'check_circle' : 'cancel';
+
+                        buttonText.textContent = newStatus ? 'Deactivate User' : 'Activate User';
+                        buttonIcon.textContent = newStatus ? 'lock' : 'lock_open';
+                        toggleButton.classList.toggle('bg-red-500', newStatus);
+                        toggleButton.classList.toggle('hover:bg-red-600', newStatus);
+                        toggleButton.classList.toggle('focus:ring-red-500', newStatus);
+                        toggleButton.classList.toggle('bg-green-500', !newStatus);
+                        toggleButton.classList.toggle('hover:bg-green-600', !newStatus);
+                        toggleButton.classList.toggle('focus:ring-green-500', !newStatus);
+                        this.dataset.currentStatus = newStatus; // Update data attribute
+
+                        statusMessageDiv.textContent = data.message;
+                        statusMessageDiv.classList.remove('text-red-500');
+                        statusMessageDiv.classList.add('text-green-600');
+
+                    } else {
+                        // Revert UI (if optimistic update was applied) and show error
+                        statusMessageDiv.textContent = 'Error: ' + data.message;
+                        statusMessageDiv.classList.remove('text-green-600');
+                        statusMessageDiv.classList.add('text-red-500');
+                        // No need to revert UI if optimistic update wasn't done, but good for robustness
+                        // If optimistic update was done, you'd revert it here based on `currentStatus`
+                    }
+                } catch (error) {
+                    console.error('Network error:', error);
+                    statusMessageDiv.textContent = 'Network error. Please try again.';
+                    statusMessageDiv.classList.remove('text-green-600');
+                    statusMessageDiv.classList.add('text-red-500');
+                } finally {
+                    // Re-enable button and hide spinner
+                    toggleButton.disabled = false;
+                    buttonText.classList.remove('hidden');
+                    buttonIcon.classList.remove('hidden');
+                    buttonSpinner.classList.add('hidden');
+
+                    // Fade out message after a few seconds
+                    setTimeout(() => {
+                        statusMessageDiv.textContent = '';
+                        statusMessageDiv.classList.remove('text-green-600', 'text-red-500');
+                    }, 3000);
+                }
+            });
+        }
+    });
+</script>
 
 {% endblock content %}

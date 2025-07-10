@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView ,UpdateView
 from product.models import Product
 from authentication.models import CustomUser
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -26,4 +27,22 @@ class UpdateEmployeeProfileView(UpdateView):
     template_name = "update_user_profile.html"
     context_object_name = "profile"
     success_url = reverse_lazy("dashboard") 
+
+def toggle_user_status(request, pk):
+    """
+    AJAX view to toggle the user_status of a UserProfile.
+    Accessible only by staff/superusers.
+    """
+    if not (request.user.is_staff or request.user.is_superuser):
+        return JsonResponse({'success': False, 'message': 'Permission denied.'}, status=403)
+
+    try:
+        profile = get_object_or_404(CustomUser, pk=pk)
+        profile.user_status = not profile.user_status
+        profile.save()
+        return JsonResponse({'success': True, 'new_status': profile.user_status, 'message': 'User status updated successfully.'})
+    except CustomUser.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Profile not found.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
