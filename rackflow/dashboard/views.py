@@ -1,7 +1,7 @@
 from authentication.forms import CustomUserCreationForm , CustomUserProfileUpdateForm
 from django.shortcuts import render , get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView ,UpdateView
+from django.views.generic import CreateView ,UpdateView , ListView
 from product.models import Product
 from authentication.models import CustomUser
 from django.http import JsonResponse
@@ -46,3 +46,15 @@ def toggle_user_status(request, pk):
     except Exception as e:
         return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
+
+
+
+class ListUsersView(ListView):
+    model = CustomUser
+    template_name = "list_users.html"
+    context_object_name = "users"  
+
+    def get_queryset(self):
+        users = super().get_queryset()
+        print("Users in DB:", users)
+        return users
