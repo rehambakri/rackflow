@@ -13,14 +13,14 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import Response
 
-from .models import Order
+from .models import Order , Consumer
 
 from django.views.generic import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db import transaction # For atomic operations
 
-from .forms import OrderForm, OrderProductFormSet
+from .forms import OrderForm, OrderProductFormSet , ConsumerForm
 class OrderDetails(DetailView):
     model = Order
     template_name = "consumer/orderDetails.html"
@@ -91,7 +91,7 @@ def update_order_status(request, id):
     if not manager.is_staff:  # change to custom check if needed
         return Response(
             {"detail": "Only managers can update order status."},
-            status=status.HTTP_403_FORBIDDEN,
+            # status=status.HTTP_403_FORBIDDEN,
         )
 
     # get the order
@@ -101,7 +101,7 @@ def update_order_status(request, id):
     if order.status != "pending":
         return Response(
             {"detail": "Order status cannot be updated."},
-            status=status.HTTP_400_BAD_REQUEST,
+            # status=status.HTTP_400_BAD_REQUEST,
         )
 
     # update status (e.g., to accepted)
@@ -111,7 +111,7 @@ def update_order_status(request, id):
         "rejected",
     ]:  # or whatever your allowed values are
         return Response(
-            {"detail": "Invalid status provided."}, status=status.HTTP_400_BAD_REQUEST
+            # {"detail": "Invalid status provided."}, status=status.HTTP_400_BAD_REQUEST
         )
 
     order.status = new_status
@@ -136,3 +136,9 @@ def update_order_status(request, id):
         },
     )
     return Response({"detail": f"Order status updated to {new_status}."})
+
+class ConsumerCreateView(CreateView):
+    model = Consumer
+    form_class = ConsumerForm
+    template_name = 'consumer/create_consumer.html'
+    success_url = reverse_lazy('consumer:list_consumers')

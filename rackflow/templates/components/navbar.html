@@ -165,12 +165,11 @@
             class="w-full flex flex-col mx-auto gap-2 transition-all duration-300 overflow-hidden max-h-0 lg:absolute lg:top-full lg:-right-8 lg:bg-[rgba(255,255,255,0.8)] lg:backdrop-blur-xl lg:shadow-lg lg:w-[200px] lg:scale-0 lg:max-w-auto lg:origin-[75%_0%] rounded-lg"
           >
             <a href="#" class="block py-2 px-3 text-gray-900">All Consumers</a>
-            <a href="#" class="block py-2 px-3 text-gray-900"
+            <a href="{% url 'consumer:create_consumer'%}" class="block py-2 px-3 text-gray-900"
               >Create Consumer</a
             >
           </div>
         </li>
-
         <li
           class="flex flex-col items-center w-full lg:w-auto justify-between py-2 relative"
         >
@@ -193,7 +192,7 @@
             class="w-full flex flex-col mx-auto gap-2 transition-all duration-300 overflow-hidden max-h-0 lg:absolute lg:top-full lg:-right-8 lg:bg-[rgba(255,255,255,0.8)] lg:backdrop-blur-xl lg:shadow-lg lg:w-[200px] lg:scale-0 lg:max-w-auto lg:origin-[75%_0%] rounded-lg"
           >
             <a href="#" class="block py-2 px-3 text-gray-900">All providers</a>
-            <a href="#" class="block py-2 px-3 text-gray-900"
+            <a               href="{% url 'provider:create_provider'%}"class="block py-2 px-3 text-gray-900"
               >Create provider</a
             >
           </div>
