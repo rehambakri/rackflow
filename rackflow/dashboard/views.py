@@ -1,8 +1,9 @@
-from authentication.forms import CustomUserCreationForm
-from django.shortcuts import render
+from authentication.forms import CustomUserCreationForm , CustomUserProfileUpdateForm
+from django.shortcuts import render , get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView ,UpdateView
 from product.models import Product
+from authentication.models import CustomUser
 
 # Create your views here.
 
@@ -18,3 +19,11 @@ def is_critical(request):
     return render(
         request, "list_critical_products.html", {"iscritical": critical_products}
     )
+
+class UpdateEmployeeProfileView(UpdateView):
+    model = CustomUser
+    form_class = CustomUserProfileUpdateForm 
+    template_name = "update_user_profile.html"
+    context_object_name = "profile"
+    success_url = reverse_lazy("dashboard") 
+
