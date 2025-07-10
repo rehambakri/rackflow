@@ -86,6 +86,7 @@
                 {{order.c_date}}
               </td>
               <td
+                id = "status-{{ order.id }}"
                 class="h-[72px] px-4 py-2 {% if order.status == 'pending' %} text-[var(--primary-dark)] {%elif order.status == 'accepted'%} text-green-500 {%else%} text-red-500 {%endif%} text-sm font-normal leading-normal capitalize"
               >
                 {{order.status}}
@@ -93,10 +94,20 @@
               <td
                 class="h-[72px] px-4 py-2 text-[var(--primary-dark)] text-sm font-normal leading-normal flex items-center gap-6"
               >
+
+              <div id="actions-{{ order.id }}" class="flex items-center gap-6">
                 {% if order.status == 'pending' and user.is_superuser %}
-                <a href="" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Modify</a>
+                <button onclick="sendStatusUpdate({{ order.id }}, 'accepted')"
+                        class="py-1 px-3 rounded border border-[var(--primary-dark)]">
+                  Accept
+                </button>
+                <button onclick="sendStatusUpdate({{ order.id }}, 'rejected')"
+                        class="py-1 px-3 rounded border border-[var(--primary-dark)]">
+                  Reject
+                </button>
                 {% endif %}
-                <a href="" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Detaisls</a>
+                <a href="{% url 'consumer:details' order.id %}" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Details</a>
+                </div>
               </td>
             </tr>
             {% endfor %}
@@ -107,3 +118,59 @@
   </div>
 </div>
 {% endblock content %}
+{% block script %}
+<script>
+    
+    pending_classes = "h-[72px] px-4 py-2 text-[var(--primary-dark)] text-sm font-normal leading-normal capitalize"
+    accepted_classes = "h-[72px] px-4 py-2 text-green-500 text-sm font-normal leading-normal capitalize"
+    rejected_classes = "h-[72px] px-4 py-2 text-red-500 text-sm font-normal leading-normal capitalize"
+
+    function sendStatusUpdate(orderId, status) {
+      fetch(`/consumer/api/orders/${orderId}/status/`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCSRFToken(),
+        },
+        body: JSON.stringify({ status: status })
+      })
+      .then(response => {
+        if (response.ok) {
+          // Update status text and style
+          const td = document.getElementById(`status-${orderId}`);
+          td.innerHTML = status.charAt(0).toUpperCase() + status.slice(1);
+          td.className = status === "accepted" ? accepted_classes :
+                         status === "rejected" ? rejected_classes :
+                         pending_classes;
+
+          // Keep only the Details button
+          const actionsDiv = document.getElementById(`actions-${orderId}`);
+          const detailsButton = actionsDiv.querySelector("a");
+          actionsDiv.innerHTML = "";
+          actionsDiv.appendChild(detailsButton);
+        } else {
+          return response.json().then(data => {
+            alert("Failed to update: " + (data.detail || response.status));
+          });
+        }
+      })
+      .catch(err => {
+        alert("Request failed: " + err);
+      });
+    }
+
+  // Get CSRF token from cookie (for Django CSRF protection)
+  function getCSRFToken() {
+    const name = 'csrftoken';
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + '=')) {
+        return decodeURIComponent(cookie.slice(name.length + 1));
+      }
+    }
+    return '';
+  }
+</script>
+
+{% endblock script %}

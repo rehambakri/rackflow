@@ -7,11 +7,18 @@ from provider.models import Shipment
 
 class Notification(models.Model):
     CHOICES = [
+        # these are sent to the manager (if he is not the sender. Don't send the
+        # manager notifications about actions he has done)
         ("product_created", "Product Created Notification"),
         ("product_deleted", "Product Deleted Notification"),
         ("product_updated", "Product Updated Notification"),
         ("order_created", "Order Created Notification"),
         ("shipment_created", "Shipment Created Notification"),
+        # these are sent to the users who made them
+        ("order_accepted", "Order Accepted Notification"),
+        ("shipment_accepted", "Shipment Accepted Notification"),
+        ("order_rejected", "Order Rejected Notification"),
+        ("shipment_rejected", "Shipment Rejected Notification"),
     ]
 
     sender = models.ForeignKey(
