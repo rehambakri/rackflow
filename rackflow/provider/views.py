@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Shipment 
+from .models import Provider
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -78,4 +79,13 @@ class ShipmentCreateView(LoginRequiredMixin, CreateView):
         return self.render_to_response(context)
 
 
-     
+class ListProviderView(LoginRequiredMixin, ListView):
+    model = Provider
+    template_name = "provider/list_providers.html"
+    context_object_name = "providers"
+
+    def get_queryset(self):
+        user  = self.request.user
+        if user.is_superuser:
+            return Provider.objects.all()
+        return Provider.objects.filter(user=user)
