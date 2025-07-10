@@ -82,6 +82,7 @@ class ProductCreate(CreateView):
             "manager_notification_channels",
             {
                 "type": "notification.new",
+                "receiver_id": manager.id,
             },
         )
         return response

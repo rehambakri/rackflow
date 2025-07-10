@@ -94,6 +94,9 @@
             >Dashboard</a
           >
         </li>
+
+        {% endif %}
+
         <!-- notification icon -->
         <li>
 
@@ -102,8 +105,6 @@
               <div id="notificationCount" class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900"></div>
             </button>
         </li>
-
-        {% endif %}
 
         <li class="nav-item">
           <form method="post" action="{% url 'logout' %}">
@@ -151,37 +152,88 @@
 </nav>
 
 <!-- embed the notification socket/menu into the navbar -->
-{% if user.is_staff %}
+{% if user.is_authenticated %}
 <div
   id="notifications"
   class="hidden relative mx-auto flex h-72 p-2 gap-2 max-w-sm flex-col overflow-auto rounded-xl bg-white shadow-lg ring-1 ring-black/5"
 ></div>
 
 <script>
-// window.location.host may equal localhost:8000 or 127.0.0.1:8000
 const socket = new WebSocket(
-    "ws://" + window.location.host + "/notifications/websocket/",
+  "ws://" + window.location.host + "/notifications/websocket/"
 );
 
-// this should maniplate the DOM to add more elements when It receives data
-// from the backend
+const anchorTagStyle = "underline text-[var(--background-dark)] hover:text-[var(--background)]";
+
 socket.onmessage = function (event) {
-    const div = document.getElementById("notifications");
-    let notificationCount = document.getElementById("notificationCount");
-    // data is an array of objects
-    let data = JSON.parse(event.data);
+  const div = document.getElementById("notifications");
+  let notificationCount = document.getElementById("notificationCount");
 
-    notificationCount.innerHtml = data.length
-    data.forEach((notification)=> {
-        if(notification.type == "product_created"){
-            console.log(notification)
-        }
-        const child = document.createElement("div");
-        child.className = "rounded-xl py-2 px-4 border border-[var(--background)]";
-        child.innerText = `${notification.content}`;
-        div.appendChild(child);
-    })
+  let data = JSON.parse(event.data);
 
+  if (notificationCount) {
+    notificationCount.innerHTML = data.length;
+  }
+
+  data.forEach((notification) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "flex gap-2 items-start rounded-xl p-3 shadow-sm border border-[var(--secondary-dark)] bg-[var(--secondary-light)]";
+
+    let iconHtml = "";
+    let contentHtml = "";
+
+    switch (notification.type) {
+      case "product_created":
+        iconHtml = `<span class="text-[var(--primary-dark)]">📦</span>`;
+        contentHtml = `${notification.content} <a href="/product/details/${notification.product_id}" class="${anchorTagStyle}">View Product</a>`;
+        break;
+
+      case "product_updated":
+        iconHtml = `<span class="text-[var(--primary-dark)]">✏️</span>`;
+        contentHtml = `${notification.content} <a href="/product/details/${notification.product_id}" class="${anchorTagStyle}">View Changes</a>`;
+        break;
+
+        // NOTE: products shouldn't be deleted (they simply should be marked as such) implement later
+      // case "product_deleted":
+      //   iconHtml = `<span class="text-[var(--primary-dark)]">🗑️</span>`;
+      //   contentHtml = `${notification.content}`;
+      //   break;
+
+      case "order_accepted":
+        iconHtml = `<span class="text-green-600">✅</span>`;
+        contentHtml = `${notification.content} <a href="/consumer/orderDetails/${notification.order_id}" class="${anchorTagStyle}">View Order</a>`;
+        break;
+
+      case "order_rejected":
+        iconHtml = `<span class="text-red-600">❌</span>`;
+        contentHtml = `${notification.content} <a href="/consumer/orderDetails/${notification.order_id}" class="${anchorTagStyle}">View Order</a>`;
+        break;
+
+      case "shipment_accepted":
+        iconHtml = `<span class="text-green-600">🚚</span>`;
+        contentHtml = `${notification.content} <a href="/provider/shipmentDetails/${notification.shipment_id}" class="${anchorTagStyle}">Track Shipment</a>`;
+        break;
+
+      case "shipment_rejected":
+        iconHtml = `<span class="text-red-600">📦❌</span>`;
+        contentHtml = `${notification.content} <a href="/provider/shipmentDetails/${notification.shipment_id}" class="${anchorTagStyle}">Shipment Info</a>`;
+        break;
+
+      default:
+        iconHtml = `<span class="text-gray-500">🔔</span>`;
+        contentHtml = notification.content || "You have a new notification.";
+    }
+
+    wrapper.innerHTML = `
+      ${iconHtml}
+      <div class="text-sm text-[var(--primary-dark)] leading-snug">
+        ${contentHtml}
+        <div class="text-xs text-gray-400 mt-1">${new Date(notification.created_date_time).toLocaleString()}</div>
+      </div>
+    `;
+
+    div.appendChild(wrapper);
+  });
 };
 
 function toggleNotificationMenu(){
