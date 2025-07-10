@@ -12,4 +12,5 @@ app_name = "provider"
 urlpatterns = [ 
     path("shipmentDetails/<int:pk>/", views.ShipmentDetails.as_view(), name="details"),
     path('shipments/', views.ListShipmentView.as_view(), name='list_shipments'),
+    path('shipment/create/', views.ShipmentCreateView.as_view(), name='create_shipment'),
 ]

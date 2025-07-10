@@ -69,6 +69,7 @@
               >All products</a
             >
             <a href="{% url 'product:create' %}" class="block py-2 px-3 text-gray-900">Create Product</a>
+            <a href="" class="block py-2 px-3 text-gray-900">Create Category</a>
           </div>
         </li>
         <li
@@ -93,7 +94,7 @@
             class="w-full flex flex-col mx-auto gap-2 transition-all duration-300 overflow-hidden max-h-0 lg:absolute lg:top-full lg:-right-8 lg:bg-[rgba(255,255,255,0.8)] lg:backdrop-blur-xl lg:shadow-lg lg:w-[200px] lg:scale-0 lg:max-w-auto lg:origin-[75%_0%] rounded-lg"
           >
             <a href="{% url 'consumer:list_orders' %}" class="block py-2 px-3 text-gray-900">All Orders</a>
-            <a href="#" class="block py-2 px-3 text-gray-900">Create Order</a>
+            <a href="{% url 'consumer:create_order'%}" class="block py-2 px-3 text-gray-900">Create Order</a>
           </div>
         </li>
         <li
@@ -103,7 +104,7 @@
             class="flex items-center w-full lg:w-auto justify-between lg:justify-start gap-2 py-2 cursor-pointer"
             data-toggleMenu="menu"
           >
-            shipment
+            Shipment
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="w-4 lg:w-3"
@@ -118,7 +119,7 @@
             class="w-full flex flex-col mx-auto gap-2 transition-all duration-300 overflow-hidden max-h-0 lg:absolute lg:top-full lg:-right-8 lg:bg-[rgba(255,255,255,0.8)] lg:backdrop-blur-xl lg:shadow-lg lg:w-[200px] lg:scale-0 lg:max-w-auto lg:origin-[75%_0%] rounded-lg"
           >
             <a href="{% url 'provider:list_shipments' %}" class="block py-2 px-3 text-gray-900">All shipments</a>
-            <a href="#" class="block py-2 px-3 text-gray-900"
+            <a href="{% url 'provider:create_shipment' %}" class="block py-2 px-3 text-gray-900"
               >Create shipment</a
             >
           </div>
@@ -159,7 +160,7 @@
             class="flex items-center w-full lg:w-auto justify-between lg:justify-start gap-2 py-2 cursor-pointer"
             data-toggleMenu="menu"
           >
-            provider
+            Provider
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="w-4 lg:w-3"
@@ -210,25 +211,12 @@
         </li>
         {% endif %}
 
-        <!-- <li class="nav-item">
-          <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button
-              class="btn btn-link nav-link hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)]"
-              style="display: inline; padding: 0; margin-left: 10px"
-              type="submit"
-            >
-              Logout
-            </button>
-          </form>
-        </li> -->
-
         {% if not user.id %}
         <!-- user icon -->
         <li class="nav-item">
           <a
             class="nav-link hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)]"
-            href=""
+            href="{% url 'login' %}"
             >Login</a
           >
         </li>
@@ -349,6 +337,8 @@
   }
 </script>
 {% endif %}
+
+
 <script>
   // Toggle menus script
   let allMenus = document.querySelectorAll("[data-toggleMenu]");

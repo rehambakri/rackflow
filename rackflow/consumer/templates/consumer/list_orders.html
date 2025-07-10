@@ -96,7 +96,7 @@
                 {% if order.status == 'pending' and user.is_superuser %}
                 <a href="" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Modify</a>
                 {% endif %}
-                <a href="" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Detaisls</a>
+                <a href="{% url 'consumer:details' order.id%}" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Detaisls</a>
               </td>
             </tr>
             {% endfor %}
