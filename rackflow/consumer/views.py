@@ -15,12 +15,16 @@ from rest_framework.views import Response
 
 from .models import Order , Consumer
 
+
 from django.views.generic import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db import transaction # For atomic operations
 
 from .forms import OrderForm, OrderProductFormSet , ConsumerForm
+
+# Create your views here.
+
 class OrderDetails(DetailView):
     model = Order
     template_name = "consumer/orderDetails.html"
@@ -142,3 +146,14 @@ class ConsumerCreateView(CreateView):
     form_class = ConsumerForm
     template_name = 'consumer/create_consumer.html'
     success_url = reverse_lazy('consumer:list_consumers')
+
+class ListConsumerView(LoginRequiredMixin, ListView):
+    model = Consumer
+    template_name = "consumer/list_consumers.html"
+    context_object_name = "consumers"
+
+    def get_queryset(self):
+        user  = self.request.user
+        if user.is_superuser:
+            return Consumer.objects.all()
+        return Consumer.objects.filter(user=user)

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="flex flex-1 justify-center w-full">
+  <div class="container mx-auto flex flex-col flex-1 py-4">
+    <div class="flex items-center gap-4 p-4 mb-12">
+      <p
+        class="text-black text-center md:text-left tracking-light text-[32px] font-bold leading-tight relative"
+      >
+        All consumers
+      </p>
+    </div>
+
+    <div class="px-4 py-3">
+      <div class="flex overflow-auto rounded-lg border border-[#e9e1ce]">
+        <table class="flex-1 text-center md:text-left min-w-[1000px] overflow-x-auto">
+          <thead>
+            <tr class="bg-[var(--secondary-light)]">
+              <th class="px-4 py-3 text-sm font-medium text-[var(--primary-dark)]">#</th>
+              <th class="px-4 py-3 text-sm font-medium text-[var(--primary-dark)]">User</th>
+              <th class="px-4 py-3 text-sm font-medium text-[var(--primary-dark)]">Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for consemer in consumers %}
+            <tr class="border-b border-[var(--primary-dark)]">
+              <td class="px-4 py-2 text-sm">{{ forloop.counter }}</td>
+              <td class="px-4 py-2 text-sm">{{ consemer.user }}</td>
+              <td class="px-4 py-2 text-sm">{{ consemer.name }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3" class="px-4 py-2 text-center text-gray-500">No consumers found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
