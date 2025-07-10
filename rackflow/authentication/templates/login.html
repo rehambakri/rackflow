@@ -41,13 +41,8 @@
           <h1 class="text-4xl font-bold text-gray-800 mt-2">Welcome Back!</h1>
           <p class="text-gray-600 mt-2">Login to continue to Rackflow.</p>
         </div>
-
+        {{form.errors}}
         <!-- Login Form -->
-          {% if form.errors %}
-          <div class="test-sm text-red-500 text-center">
-            Your email and password didn't match. Please try again.
-          </div>
-          {% endif %}
         <form action="" method="POST">
           {% csrf_token %}
           <div class="mb-6">
