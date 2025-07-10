@@ -1,29 +1,89 @@
+
 {% extends "base.html" %} {% load static %} {% block content %}
-<div class="p-10 bg-gray-100 font-sans h-screen">
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">All Users</h1>
-    <table class="w-full text-left border-collapse">
-      <thead>
-        <tr class="bg-[var(--secondary-light)]">
-          <th class="p-2 text-[var(--primary-dark)]">#</th>
-          <th class="p-2 text-[var(--primary-dark)]">Username</th>
-          <th class="p-2 text-[var(--primary-dark)]">Email</th>
-          <th class="p-2 text-[var(--primary-dark)]">Date Joined</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-  <tr class="border-b border-[var(--primary-dark)]">
-    <td class="p-2">{{ forloop.counter }}</td>
-    <td class="p-2">{{ user.first_name }}</td>
-    <td class="p-2">{{ user.email }}</td>
-    <td class="p-2">{{ user.date_joined }}</td>
-  </tr>
-{% empty %}
-  <tr><td colspan="4">No users found.</td></tr>
-{% endfor %}
-      </tbody>
-    </table>
+
+<div class="flex flex-1 justify-center w-full">
+  <div class="container mx-auto flex flex-col flex-1 py-4">
+    <div class="flex items-center gap-4 p-4 mb-12">
+
+      <p
+        class="text-black text-center md:text-left tracking-light text-[32px] font-bold leading-tight relative "
+      >
+        All Users
+      </p>
+    </div>
+
+    <div class="px-4 py-3">
+      <div
+        class="flex overflow-auto rounded-lg border border-[#e9e1ce] "
+      >
+        <table class="flex-1 text-center md:text-left min-w-[1000px] overflow-x-auto">
+          <thead>
+            <tr class="bg-[var(--secondary-light)]">
+              <th
+                class="px-4 py-3 text-center md:text-left text-[var(--primary-dark)] text-sm font-medium leading-normal"
+              >
+                #
+              </th>
+              <th
+                class="px-4 py-3 text-center md:text-left text-[var(--primary-dark)] text-sm font-medium leading-normal"
+              >
+                Username
+              </th>
+              <th
+                class="px-4 py-3 text-center md:text-left text-[var(--primary-dark)] text-sm font-medium leading-normal"
+              >
+                Email
+              </th>
+              <th
+                class="px-4 py-3 text-center md:text-left text-[var(--primary-dark)] text-sm font-medium leading-normal"
+              >
+                Date Joined
+              </th>
+               <th
+                 class="px-4 py-3 text-center md:text-left text-[var(--primary-dark)] text-sm font-medium leading-normal"
+              >
+                Actions
+              </th>
+              
+          </thead>
+          <tbody>
+            {% for user in users %}
+            <tr class="border-b border-[var(--primary-dark)]">
+              <td
+                class="h-[72px] px-4 py-2 text-sm font-normal leading-normal"
+              >
+                {{ forloop.counter }}
+              </td>
+              <td
+                class="h-[72px] px-4 py-2 text-sm font-normal leading-normal"
+              >
+                {{ user.first_name }}
+              </td>
+              <td
+                class="h-[72px] px-4 py-2 text-sm font-normal leading-normal"
+              >
+                {{ user.email }}
+              </td>
+              <td
+                class="h-[72px] px-4 py-2  text-sm font-normal leading-normal"
+              >
+                {{ user.date_joined }}
+              </td>
+               <td
+                class="h-[72px] px-4 py-2 text-sm font-normal leading-normal flex items-center gap-6"
+              >
+                <a href="" class="py-1 px-3 rounded border border-[var(--primary-dark)]">
+                  edit
+                </td>
+              
+              {% empty %}
+             <tr><td colspan="4">No users found.</td></tr>
+          
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock content %}
