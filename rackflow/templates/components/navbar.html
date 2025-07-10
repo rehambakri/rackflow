@@ -2,110 +2,215 @@
 
 <!-- Navbar -->
 <nav class="bg-[var(--primary-light)] border-gray-200">
-  <div
-    class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
-  >
+  <div class="container flex items-center justify-between mx-auto p-4">
     <a
       href="https://flowbite.com/"
       class="flex items-center space-x-3 rtl:space-x-reverse"
     >
       <!-- Logo -->
-      <img
-        src="{% static 'images/logoicon.svg' %}"
-        alt="Logo"
-        class="w-12 h-12"
-      />
-      <span class="self-center text-2xl font-semibold whitespace-nowrap"
+      <img src="{% static 'images/logoicon.svg' %}" alt="Logo" class="w-10" />
+      <span class="self-center text-xl font-semibold whitespace-nowrap"
         >Rackflow</span
       >
     </a>
 
     <div
-      class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+      class="w-full items-center justify-end w-full flex relative gap-4"
       id="navbar-user"
     >
+      <div
+        onclick="togglePageMenu()"
+        id="layout"
+        class="fixed hidden w-screen h-screen lg:hidden top-0 left-0 bg-[rgba(0,0,0,0.5)] z-10"
+      ></div>
       <ul
-        class="flex flex-col items-center font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-[var(--primary-light)] md:space-x-4 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0"
+        id="pageMenu"
+        class="flex flex-col scale-x-0 transition duration-300 origin-right lg:scale-x-100 lg:flex-row items-center gap-4 fixed lg:relative h-screen lg:h-auto top-0 right-0 bg-[var(--primary-light)] lg:bg-transparent w-[300px] lg:w-auto z-20 p-6 lg:p-0"
       >
-        <li>
-          <a
-            href="#"
-            class="block py-2 px-3 text-white bg-[var(--primary-dark)] rounded-sm md:bg-transparent md:text-[var(--primary-dark)] md:p-0"
-            aria-current="page"
-            >Home</a
+        <!-- close icon in mobile menu -->
+        <li class="w-full lg:hidden">
+          <svg
+            class="w-4 cursor-pointer"
+            onclick="togglePageMenu()"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 384 512"
           >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)] md:p-0"
-            >Products</a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)] md:p-0"
-            >Order</a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)] md:p-0"
-            >shepments</a
-          >
+            <path
+              d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+            />
+          </svg>
         </li>
 
+        <!-- nav items -->
+        <li
+          class="flex flex-col items-center w-full lg:w-auto justify-between py-2 relative"
+        >
+          <div
+            class="flex items-center w-full lg:w-auto justify-between lg:justify-start gap-2 py-2 cursor-pointer"
+            data-toggleMenu="menu"
+          >
+            Products
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 lg:w-3"
+              viewBox="0 0 448 512"
+            >
+              <path
+                d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+              />
+            </svg>
+          </div>
+          <div
+            class="w-full flex flex-col mx-auto gap-2 transition-all duration-300 overflow-hidden max-h-0 lg:absolute lg:top-full lg:-right-8 lg:bg-[rgba(255,255,255,0.8)] lg:backdrop-blur-xl lg:shadow-lg lg:w-[200px] lg:scale-0 lg:max-w-auto lg:origin-[75%_0%] rounded-lg"
+          >
+            <a
+              href="{% url 'product:list' %}"
+              class="block py-2 px-3 text-gray-900"
+              >All products</a
+            >
+            <a href="{% url 'product:create' %}" class="block py-2 px-3 text-gray-900">Create Product</a>
+          </div>
+        </li>
+        <li
+          class="flex flex-col items-center w-full lg:w-auto justify-between py-2 relative"
+        >
+          <div
+            class="flex items-center w-full lg:w-auto justify-between lg:justify-start gap-2 py-2 cursor-pointer"
+            data-toggleMenu="menu"
+          >
+            Order
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 lg:w-3"
+              viewBox="0 0 448 512"
+            >
+              <path
+                d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+              />
+            </svg>
+          </div>
+          <div
+            class="w-full flex flex-col mx-auto gap-2 transition-all duration-300 overflow-hidden max-h-0 lg:absolute lg:top-full lg:-right-8 lg:bg-[rgba(255,255,255,0.8)] lg:backdrop-blur-xl lg:shadow-lg lg:w-[200px] lg:scale-0 lg:max-w-auto lg:origin-[75%_0%] rounded-lg"
+          >
+            <a href="{% url 'consumer:list_orders' %}" class="block py-2 px-3 text-gray-900">All Orders</a>
+            <a href="#" class="block py-2 px-3 text-gray-900">Create Order</a>
+          </div>
+        </li>
+        <li
+          class="flex flex-col items-center w-full lg:w-auto justify-between py-2 relative"
+        >
+          <div
+            class="flex items-center w-full lg:w-auto justify-between lg:justify-start gap-2 py-2 cursor-pointer"
+            data-toggleMenu="menu"
+          >
+            shipment
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 lg:w-3"
+              viewBox="0 0 448 512"
+            >
+              <path
+                d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+              />
+            </svg>
+          </div>
+          <div
+            class="w-full flex flex-col mx-auto gap-2 transition-all duration-300 overflow-hidden max-h-0 lg:absolute lg:top-full lg:-right-8 lg:bg-[rgba(255,255,255,0.8)] lg:backdrop-blur-xl lg:shadow-lg lg:w-[200px] lg:scale-0 lg:max-w-auto lg:origin-[75%_0%] rounded-lg"
+          >
+            <a href="{% url 'provider:list_shipments' %}" class="block py-2 px-3 text-gray-900">All shipments</a>
+            <a href="#" class="block py-2 px-3 text-gray-900"
+              >Create shipment</a
+            >
+          </div>
+        </li>
+
+        <li
+          class="flex flex-col items-center w-full lg:w-auto justify-between py-2 relative"
+        >
+          <div
+            class="flex items-center w-full lg:w-auto justify-between lg:justify-start gap-2 py-2 cursor-pointer"
+            data-toggleMenu="menu"
+          >
+            Consumer
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 lg:w-3"
+              viewBox="0 0 448 512"
+            >
+              <path
+                d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+              />
+            </svg>
+          </div>
+          <div
+            class="w-full flex flex-col mx-auto gap-2 transition-all duration-300 overflow-hidden max-h-0 lg:absolute lg:top-full lg:-right-8 lg:bg-[rgba(255,255,255,0.8)] lg:backdrop-blur-xl lg:shadow-lg lg:w-[200px] lg:scale-0 lg:max-w-auto lg:origin-[75%_0%] rounded-lg"
+          >
+            <a href="#" class="block py-2 px-3 text-gray-900">All Consumers</a>
+            <a href="#" class="block py-2 px-3 text-gray-900"
+              >Create Consumer</a
+            >
+          </div>
+        </li>
+
+        <li
+          class="flex flex-col items-center w-full lg:w-auto justify-between py-2 relative"
+        >
+          <div
+            class="flex items-center w-full lg:w-auto justify-between lg:justify-start gap-2 py-2 cursor-pointer"
+            data-toggleMenu="menu"
+          >
+            provider
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 lg:w-3"
+              viewBox="0 0 448 512"
+            >
+              <path
+                d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+              />
+            </svg>
+          </div>
+          <div
+            class="w-full flex flex-col mx-auto gap-2 transition-all duration-300 overflow-hidden max-h-0 lg:absolute lg:top-full lg:-right-8 lg:bg-[rgba(255,255,255,0.8)] lg:backdrop-blur-xl lg:shadow-lg lg:w-[200px] lg:scale-0 lg:max-w-auto lg:origin-[75%_0%] rounded-lg"
+          >
+            <a href="#" class="block py-2 px-3 text-gray-900">All providers</a>
+            <a href="#" class="block py-2 px-3 text-gray-900"
+              >Create provider</a
+            >
+          </div>
+        </li>
         {% if user.is_staff %}
-        <li>
-          <a
-            href="#"
-            class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)] md:p-0"
-            >employees</a
-          >
-        </li>
-        {% endif %} {% if user.is_staff %}
-        <li>
-          <a
-            href="#"
-            class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)] md:p-0"
-            >pending shepments</a
-          >
-        </li>
-        {% endif %} {% if user.is_staff %}
-        <li>
-          <a
-            href="#"
-            class="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)] md:p-0"
-            >pending orders</a
-          >
-        </li>
 
+        <li
+          class="flex flex-col items-center w-full lg:w-auto justify-between py-2 relative"
+        >
+          <div
+            class="flex items-center w-full lg:w-auto justify-between lg:justify-start gap-2 py-2 cursor-pointer"
+            data-toggleMenu="menu"
+          >
+            Dashboard
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-4 lg:w-3"
+              viewBox="0 0 448 512"
+            >
+              <path
+                d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+              />
+            </svg>
+          </div>
+          <div
+            class="w-full flex flex-col mx-auto gap-2 transition-all duration-300 overflow-hidden max-h-0 lg:absolute lg:top-full lg:-right-8 lg:bg-[rgba(255,255,255,0.8)] lg:backdrop-blur-xl lg:shadow-lg lg:w-[200px] lg:scale-0 lg:max-w-auto lg:origin-[75%_0%] rounded-lg"
+          >
+            <a href="#" class="block py-2 px-3 text-gray-900">Employees</a>
+            <a href="{% url 'is_critical' %}" class="block py-2 px-3 text-gray-900"
+              >Critical products</a
+            >
+          </div>
+        </li>
         {% endif %}
 
-        <!-- we will add this when we have a dashboard -->
-
-        {% if user.is_authenticated %} {% if user.is_staff %}
-        <li class="nav-item">
-          <a
-            class="nav-link block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)] md:p-0"
-            href=""
-            >Dashboard</a
-          >
-        </li>
-        <!-- notification icon -->
-        <li>
-
-            <button type="button" onClick=toggleNotificationMenu() class="relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-[var(--background)] rounded-lg hover:bg-[var(--background-dark)] focus:ring-4 focus:outline-none focus:ring-blue-300">
-            <span class="material-icons text-white-400 w-6 h-5">notifications</span>
-              <div id="notificationCount" class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900"></div>
-            </button>
-        </li>
-
-        {% endif %}
-
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button
@@ -116,8 +221,10 @@
               Logout
             </button>
           </form>
-        </li>
-        {% else %}
+        </li> -->
+
+        {% if not user.id %}
+        <!-- user icon -->
         <li class="nav-item">
           <a
             class="nav-link hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)]"
@@ -126,27 +233,78 @@
           >
         </li>
 
-        {% endif %} {% if user.id %}
-        <li class="nav-item me-2">
-          {% comment %}
-          <a href="{% url 'profile_update' %}">
-            {% endcomment %}
-            <img
-              src="{{request.user.profile_image.url }}"
-              alt="Profile"
-              style="
-                width: 35px;
-                height: 35px;
-                border-radius: 50%;
-                object-fit: cover;
-              "
-            />
-          </a>
-        </li>
         {% endif %}
       </ul>
+
+      {% if user.is_staff %}
+
+      <!-- notification -->
+      <div>
+        <button
+          type="button"
+          onClick="toggleNotificationMenu()"
+          class="relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-[var(--background)] rounded-lg hover:bg-[var(--background-dark)] focus:ring-4 focus:outline-none focus:ring-blue-300"
+        >
+          <span class="material-icons text-white-400 w-6 h-5"
+            >notifications</span
+          >
+          <div
+            id="notificationCount"
+            class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900"
+          ></div>
+        </button>
+      </div>
+      {% endif %} {% if user.id%}
+      <!-- user date menu -->
+      <div class="me-2">
+        <div
+          id="userDataMenu"
+          class="flex items-center justify-between lg:justify-start cursor-pointer"
+        >
+          <img
+            src="{{user.profile_image.url }}"
+            alt="Profile"
+            style="
+              width: 35px;
+              height: 35px;
+              border-radius: 50%;
+              object-fit: cover;
+            "
+          />
+        </div>
+        <div
+          class="w-[200px] flex flex-col gap-2 transition-all duration-300 absolute top-[calc(100%+16px)] right-0 bg-[rgba(255,255,255,0.8)] backdrop-blur-xl shadow-lg scale-0 origin-[75%_0%] rounded-lg"
+        >
+          <p
+            class="w-full text-center py-2 px-3 text-[var(--primary-dark)] capitalize"
+          >
+            {{user.first_name}} {{user.last_name}}
+          </p>
+          <form method="post" action="{% url 'logout' %}" class="w-full">
+            {% csrf_token %}
+            <button
+              class="w-full hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[var(--primary-dark)] text-left py-2 px-3"
+              type="submit"
+            >
+              Logout
+            </button>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="lg:hidden cursor-pointer" id="bars">
+        <svg
+          class="w-6"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512"
+        >
+          <path
+            d="M0 96C0 78.3 14.3 64 32 64l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 128C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32l384 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 288c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32L32 448c-17.7 0-32-14.3-32-32s14.3-32 32-32l384 0c17.7 0 32 14.3 32 32z"
+          />
+        </svg>
+      </div>
     </div>
-      
   </div>
 </nav>
 
@@ -158,37 +316,77 @@
 ></div>
 
 <script>
-// window.location.host may equal localhost:8000 or 127.0.0.1:8000
-const socket = new WebSocket(
-    "ws://" + window.location.host + "/notifications/websocket/",
-);
+  // window.location.host may equal localhost:8000 or 127.0.0.1:8000
+  const socket = new WebSocket(
+    "ws://" + window.location.host + "/notifications/websocket/"
+  );
 
-// this should maniplate the DOM to add more elements when It receives data
-// from the backend
-socket.onmessage = function (event) {
+  // this should maniplate the DOM to add more elements when It receives data
+  // from the backend
+  socket.onmessage = function (event) {
     const div = document.getElementById("notifications");
     let notificationCount = document.getElementById("notificationCount");
     // data is an array of objects
     let data = JSON.parse(event.data);
 
-    notificationCount.innerHtml = data.length
-    data.forEach((notification)=> {
-        if(notification.type == "product_created"){
-            console.log(notification)
-        }
-        const child = document.createElement("div");
-        child.className = "rounded-xl py-2 px-4 border border-[var(--background)]";
-        child.innerText = `${notification.content}`;
-        div.appendChild(child);
-    })
+    notificationCount.innerHtml = data.length;
+    data.forEach((notification) => {
+      if (notification.type == "product_created") {
+        console.log(notification);
+      }
+      const child = document.createElement("div");
+      child.className =
+        "rounded-xl py-2 px-4 border border-[var(--background)]";
+      child.innerText = `${notification.content}`;
+      div.appendChild(child);
+    });
+  };
 
-};
-
-function toggleNotificationMenu(){
-    let notifMenu = document.getElementById("notifications")
-    notifMenu.classList.toggle("hidden")
+  function toggleNotificationMenu() {
+    let notifMenu = document.getElementById("notifications");
+    notifMenu.classList.toggle("hidden");
     // I need to add new attribute the the notification model is seen
-
-}
+  }
 </script>
 {% endif %}
+<script>
+  // Toggle menus script
+  let allMenus = document.querySelectorAll("[data-toggleMenu]");
+  let userDataMenu = document.getElementById("userDataMenu");
+
+  function closeAllMenus(exceptedMenu) {
+    allMenus.forEach((menu) => {
+      if (menu != exceptedMenu) {
+        menu.nextElementSibling.classList.remove("!max-h-[1000px]");
+        menu.nextElementSibling.classList.remove("lg:!scale-100");
+      }
+    });
+    if (exceptedMenu != userDataMenu) {
+      userDataMenu.nextElementSibling.classList.remove("!scale-100");
+    }
+  }
+  allMenus.forEach((menu) => {
+    menu.addEventListener("click", function (e) {
+      closeAllMenus(this);
+      this.nextElementSibling.classList.toggle("!max-h-[1000px]");
+      this.nextElementSibling.classList.toggle("lg:!scale-100");
+    });
+  });
+
+  // mobile page menu
+  function togglePageMenu() {
+    let layout = document.getElementById("layout");
+    let pageMenu = document.getElementById("pageMenu");
+    pageMenu.classList.toggle("scale-x-100");
+    layout.classList.toggle("!block");
+  }
+  document.getElementById("bars").addEventListener("click", function () {
+    togglePageMenu();
+  });
+
+  // user data menu
+  userDataMenu.addEventListener("click", function (e) {
+    closeAllMenus(this);
+    this.nextElementSibling.classList.toggle("!scale-100");
+  });
+</script>
