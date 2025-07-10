@@ -43,7 +43,7 @@
               <th
                 class="px-4 py-3 text-center md:text-left text-dark text-sm font-medium leading-normal"
               >
-                Consumer
+                Provider
               </th>
               <th
                 class="px-4 py-3 text-center md:text-left text-dark text-sm font-medium leading-normal"
@@ -78,7 +78,7 @@
               <td
                 class="h-[72px] px-4 py-2 text-[var(--primary-dark)] text-sm font-normal leading-normal"
               >
-                {{shipment.consumer.name}}
+                {{shipment.provider.name}}
               </td>
               <td
                 class="h-[72px] px-4 py-2 text-[var(--primary-dark)] text-sm font-normal leading-normal"
@@ -96,7 +96,7 @@
                 {% if shipment.status == 'pending' and user.is_superuser %}
                 <a href="" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Modify</a>
                 {% endif %}
-                <a href="" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Detaisls</a>
+                <a href="{% url 'provider:details' shipment.id %}" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Detaisls</a>
               </td>
             </tr>
             {% endfor %}

@@ -1,0 +1,193 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="flex flex-1 justify-center w-full">
+  <div class="container mx-auto flex flex-col flex-1 py-4">
+    <div class="flex items-center gap-4 p-4 mb-12">
+      <a href="{% url 'product:list' %}">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-6"
+          viewBox="0 0 448 512"
+        >
+          <path
+            d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"
+          />
+        </svg>
+      </a>
+
+      <h1
+        class="text-black text-center md:text-left tracking-light text-[32px] font-bold leading-tight relative expand-underline"
+      >
+        Create New Shipmnet
+      </h1>
+    </div>
+    <form method="post" class="px-4 py-3">
+      {% csrf_token %}
+
+      <!-- shipment Form Fields -->
+      <div class="mb-6">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Shipment Details</h2>
+
+        {% if form.errors %}
+        <div class="text-red-500 mb-2">
+          {% for error in form.non_field_errors %} {{ error }} {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="form-row">
+          <label for="{{ form.provider.id_for_label }}" class="mb-4 block"
+            >Provider:</label
+          >
+          {{ form.provider }} {% if form.provider.errors %}
+          <ul class="errorlist">
+            {% for error in form.provider.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- shipment Products Formset -->
+      <div class="formset-container">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Products</h2>
+        {{ shipment_product_formset.management_form }}
+
+        <div id="shipment-products-container" class="flex flex-col gap-4">
+          {% for form in shipment_product_formset %}
+          <div class="formset-item flex gap-4" id="form-{{ forloop.counter0 }}">
+            {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+            {% if shipment_product_formset.can_delete %}
+              <div class="hidden">{{ form.DELETE }}</div>
+            {% endif %}
+            <div class="flex-1">
+              <label for="{{ form.product.id_for_label }}" class="block mb-4"
+                >Product:</label
+              >
+              {{ form.product }} {% if form.product.errors %}
+              <ul class="errorlist">
+                {% for error in form.product.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </div>
+            <div class="flex-1">
+              <label for="{{ form.quantity.id_for_label }}" class="block mb-4"
+                >Quantity:</label
+              >
+              {{ form.quantity }} {% if form.quantity.errors %}
+              <ul class="errorlist">
+                {% for error in form.quantity.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </div>
+            {% if shipment_product_formset.can_delete %}
+            <div class="shrink-0 items-end justify-center flex">
+              <button
+                type="button"
+                class="bg-red-500 py-2 px-4 text-white rounded mb-1 block"
+                onclick="deleteForm('form-{{ forloop.counter0 }}')"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-4 fill-white">
+                  <path
+                    d="M135.2 17.7L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-7.2-14.3C307.4 6.8 296.3 0 284.2 0L163.8 0c-12.1 0-23.2 6.8-28.6 17.7zM416 128L32 128 53.2 467c1.6 25.3 22.6 45 47.9 45l245.8 0c25.3 0 46.3-19.7 47.9-45L416 128z"
+                  />
+                </svg>
+              </button>
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+
+        <button type="button" class="bg-[var(--primary)] py-2 px-4 rounded mt-4 ml-auto block" id="add-product-button">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-white" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
+        </button>
+      </div>
+
+      <button type="submit" class="bg-[var(--primary)] py-2 px-4 rounded mt-4 block text-white">Create Shipment</button>
+    </form>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const addProductButton = document.getElementById("add-product-button");
+    const shipmentProductsContainer = document.getElementById(
+      "shipment-products-container"
+    );
+    const totalFormsInput = document.querySelector(
+      'input[name="shipment_products-TOTAL_FORMS"]'
+    );
+    const emptyFormTemplate = `
+                <div class="formset-item flex gap-4" id="__prefix__">
+                    ${document
+                      .querySelector("#shipment-products-container .formset-item")
+                      .innerHTML.replace(
+                        /id="id_shipment_products-\d+-product"/g,
+                        'id="id_shipment_products-__prefix__-product"'
+                      )
+                      .replace(
+                        /name="shipment_products-\d+-product"/g,
+                        'name="shipment_products-__prefix__-product"'
+                      )
+                      .replace(
+                        /id="id_shipment_products-\d+-quantity"/g,
+                        'id="id_shipment_products-__prefix__-quantity"'
+                      )
+                      .replace(
+                        /name="shipment_products-\d+-quantity"/g,
+                        'name="shipment_products-__prefix__-quantity"'
+                      )
+                      .replace(
+                        /id="id_shipment_products-\d+-id"/g,
+                        'id="id_shipment_products-__prefix__-id"'
+                      )
+                      .replace(
+                        /name="shipment_products-\d+-id"/g,
+                        'name="shipment_products-__prefix__-id"'
+                      )
+                      .replace(
+                        /id="id_shipment_products-\d+-DELETE"/g,
+                        'id="id_shipment_products-__prefix__-DELETE"'
+                      )
+                      .replace(
+                        /name="shipment_products-\d+-DELETE"/g,
+                        'name="shipment_products-__prefix__-DELETE"'
+                      )
+                      .replace(
+                        /onclick="deleteForm\('form-\d+'\)"/g,
+                        "onclick=\"deleteForm('__prefix__')\""
+                      )}
+                </div>
+            `;
+
+    let formIdx = parseInt(totalFormsInput.value); // Current number of forms
+
+    addProductButton.addEventListener("click", function () {
+      const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formIdx);
+      const newFormDiv = document.createElement("div");
+      newFormDiv.innerHTML = newFormHtml;
+      shipmentProductsContainer.appendChild(newFormDiv.firstElementChild); // Append the actual formset-item div
+
+      totalFormsInput.value = formIdx + 1;
+      formIdx++;
+    });
+
+    // Function to delete a form (set DELETE to true)
+    window.deleteForm = function (formId) {
+      const formElement = document.getElementById(formId);
+      if (formElement) {
+        const deleteInput = formElement.querySelector('input[name$="-DELETE"]');
+        if (deleteInput) {
+          // To mark a form for deletion in a Django formset, you must check the DELETE checkbox.
+          deleteInput.checked = true;
+          formElement.style.display = "none"; // Hide the form
+        }
+      }
+    };
+  });
+</script>
+
+{% endblock content %}

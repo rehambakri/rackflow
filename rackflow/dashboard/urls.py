@@ -10,7 +10,7 @@ urlpatterns = [
         path('update-user-profile/<int:pk>/', views.UpdateEmployeeProfileView.as_view(), name='update_user_profile'),
         path('profile/<int:pk>/toggle_status/', toggle_user_status, name='toggle_user_status'),
         path('list_users/', views.ListUsersView.as_view(), name='list_users'),
-
+]
 
 
 
