@@ -85,3 +85,7 @@ class ProductArrivalForm(forms.Form):
         if 'initial' in kwargs:
             self.fields['product_name'].initial = kwargs['initial'].get('product_name')
 
+class ProviderForm(forms.ModelForm):
+    class Meta: 
+        model = Provider 
+        fields = ['name']

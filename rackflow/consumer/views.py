@@ -10,15 +10,19 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import Response
 
-from .models import Order
 from django.contrib import messages
+from .models import Order , Consumer
+
+
 from django.views.generic import CreateView
 from django.db import transaction # For atomic operations
 from rest_framework import status
 
 
-from .forms import OrderForm, OrderProductFormSet
 from product.models import ProductDetails
+from .forms import OrderForm, OrderProductFormSet , ConsumerForm
+
+# Create your views here.
 
 class OrderDetails(DetailView):
     model = Order
@@ -146,7 +150,7 @@ def update_order_status(request, id):
     if not request.user.is_staff:
         return Response(
             {"detail": "Only managers can update order status."},
-            status=status.HTTP_403_FORBIDDEN,
+            # status=status.HTTP_403_FORBIDDEN,
         )
 
     # Get the order
@@ -156,7 +160,7 @@ def update_order_status(request, id):
     if order.status != "pending":
         return Response(
             {"detail": "Order status cannot be updated."},
-            status=status.HTTP_400_BAD_REQUEST,
+            # status=status.HTTP_400_BAD_REQUEST,
         )
 
     # Validate new status
@@ -240,3 +244,20 @@ def update_order_status(request, id):
     )
 
     return Response({"detail": f"Order status updated to {new_status}."})
+
+class ConsumerCreateView(CreateView):
+    model = Consumer
+    form_class = ConsumerForm
+    template_name = 'consumer/create_consumer.html'
+    success_url = reverse_lazy('consumer:list_consumers')
+
+class ListConsumerView(LoginRequiredMixin, ListView):
+    model = Consumer
+    template_name = "consumer/list_consumers.html"
+    context_object_name = "consumers"
+
+    def get_queryset(self):
+        user  = self.request.user
+        if user.is_superuser:
+            return Consumer.objects.all()
+        return Consumer.objects.filter(user=user)

@@ -15,9 +15,7 @@ urlpatterns = [
     path('shipment/create/', views.ShipmentCreateView.as_view(), name='create_shipment'),
     path('shipment/update/<int:pk>/', views.ShipmentUpdateView.as_view(), name='update_shipment'),
     path("api/shipment/<int:id>/status/", views.update_shipment_status),
-    path('shipments/<int:pk>/process-arrival/', 
-         views.ShipmentArrivalView.as_view(), 
-         name='process_arrival'),
-
-
+    path('shipments/<int:pk>/process-arrival/', views.ShipmentArrivalView.as_view(), name='process_arrival'),
+    path('create/' , views.ProviderCreateView.as_view(),name='create_provider'),
+    path('providers/', views.ListProviderView.as_view(), name='list_providers'),
 ]

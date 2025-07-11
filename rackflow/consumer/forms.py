@@ -60,3 +60,8 @@ OrderProductFormSet = inlineformset_factory(
     can_delete=True,  # Allow deleting existing order products
     fields=["product", "quantity"],
 )
+
+class ConsumerForm(forms.ModelForm):
+    class Meta:
+        model = Consumer
+        fields = ['name']

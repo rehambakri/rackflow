@@ -1,4 +1,6 @@
-from .models import Shipment 
+from django.shortcuts import render
+from .models import Shipment , Provider
+
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,6 +22,7 @@ from product.models import Product,ProductDetails
 from rest_framework import status
 from django.utils import timezone
 from django.shortcuts import redirect
+from .forms import ProviderForm
 # Create your views here.
 
 class ShipmentDetails(DetailView):
@@ -277,3 +280,19 @@ def update_shipment_status(request, id):
     )
 
     return Response({"detail": f"Shipment status updated to {new_status}."})
+class ProviderCreateView(CreateView):
+    model = Provider 
+    form_class= ProviderForm
+    template_name = 'provider/create_provider.html'
+    success_url = reverse_lazy('provider:list_providers')
+
+class ListProviderView(LoginRequiredMixin, ListView):
+    model = Provider
+    template_name = "provider/list_providers.html"
+    context_object_name = "providers"
+
+    def get_queryset(self):
+        user  = self.request.user
+        if user.is_superuser:
+            return Provider.objects.all()
+        return Provider.objects.filter(user=user)
