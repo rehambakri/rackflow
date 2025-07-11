@@ -150,7 +150,7 @@ def update_order_status(request, id):
     if not request.user.is_staff:
         return Response(
             {"detail": "Only managers can update order status."},
-            # status=status.HTTP_403_FORBIDDEN,
+             status=status.HTTP_403_FORBIDDEN,
         )
 
     # Get the order
@@ -160,7 +160,7 @@ def update_order_status(request, id):
     if order.status != "pending":
         return Response(
             {"detail": "Order status cannot be updated."},
-            # status=status.HTTP_400_BAD_REQUEST,
+             status=status.HTTP_400_BAD_REQUEST,
         )
 
     # Validate new status
