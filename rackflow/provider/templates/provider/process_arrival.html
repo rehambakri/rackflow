@@ -33,7 +33,6 @@
       {{ object.c_date|date:"Y-m-d H:i" }}
     </p>
   </div>
-
   <form method="post" class="space-y-6">
     {% csrf_token %}
 
@@ -53,6 +52,10 @@
         <tbody>
           {% for form in formset %}
           <tr class="border-t">
+            <td class="p-3 hidden">
+              {{ form.product_id }}
+              {{ form.product_name.value|default_if_none:form.initial.product_name }}
+            </td>
             <td class="p-3">{{ form.initial.product_name }}</td>
             <td class="p-3">{{ form.quantity }} {{ form.quantity.errors }}</td>
             <td class="p-3">

@@ -40,6 +40,7 @@ class Product(models.Model):
     @property
     def quantity(self):
         result = self.details.aggregate(total=Sum("quantity"))
+
         if result["total"]:
             return int(result["total"])
         else:

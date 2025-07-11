@@ -19,7 +19,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.shortcuts import render
 from django.urls import include, path
 
 urlpatterns = [
@@ -30,6 +29,5 @@ urlpatterns = [
     path("consumer/", include("consumer.urls")),
     path("provider/", include("provider.urls")),
     path("", include("authentication.urls")),
-    path("dashboard/", include("dashboard.urls")),
-    
+    path("dashboard/", include("dashboard.urls")),    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -73,7 +73,7 @@
               class="block py-2 px-3 text-gray-900"
               >Create Product</a
             >
-            <a href="" class="block py-2 px-3 text-gray-900">Create Category</a>
+            <a href="{% url 'product:create-category' %}" class="block py-2 px-3 text-gray-900">Create Category</a>
           </div>
         </li>
         <li
@@ -223,12 +223,11 @@
           <div
             class="w-full flex flex-col mx-auto gap-2 transition-all duration-300 overflow-hidden max-h-0 lg:absolute lg:top-full lg:-right-8 lg:bg-[rgba(255,255,255,0.8)] lg:backdrop-blur-xl lg:shadow-lg lg:w-[200px] lg:scale-0 lg:max-w-auto lg:origin-[75%_0%] rounded-lg"
           >
-            <a href="#" class="block py-2 px-3 text-gray-900">Employees</a>
+            <a href="{% url 'dashboard:list_users' %}" class="block py-2 px-3 text-gray-900">Employees</a>
             <a
-              href="{% url 'authentication:is_critical' %}"
+              href="{% url 'dashboard:is_critical' %}"
               class="block py-2 px-3 text-gray-900"
-              >Critical products</a
-            >
+              >Critical products</a>
           </div>
         </li>
         {% endif %} 
@@ -258,7 +257,7 @@
           <span class="material-icons text-white w-6 h-5"
             >notifications</span
           >
-          <span id="notification-alert" class="absolute -top-[1px] -right-[1px] w-3 h-3 bg-red-500 rounded-full block"></span>
+          <span id="notification-alert" class="absolute -top-[1px] -right-[1px] w-3 h-3 bg-red-500 rounded-full hidden"></span>
         </button>
         <div
           id="notifications"
@@ -331,7 +330,7 @@
 
   socket.onmessage = function (event) {
     const notificationAlert = document.getElementById("notification-alert");
-    notificationAlert.classList.remove("!hidden");
+    notificationAlert.classList.add("!block");
     const div = document.getElementById("notifications");
 
     let data = JSON.parse(event.data);
@@ -462,6 +461,6 @@
   notificationMenu.addEventListener("click", function (e) {
     closeAllMenus(this);
     this.nextElementSibling.classList.toggle("!scale-100");
-    notificationAlert.classList.add("!hidden")
+    notificationAlert.classList.remove("!block")
   });
 </script>

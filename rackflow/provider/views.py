@@ -325,7 +325,6 @@ def update_shipment_status(request, id):
 
     return Response({"detail": f"Shipment status updated to {new_status}."})
 
-
 class ProviderCreateView(CreateView):
     model = Provider
     form_class = ProviderForm

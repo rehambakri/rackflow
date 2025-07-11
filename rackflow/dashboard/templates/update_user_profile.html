@@ -138,8 +138,7 @@
             <div class="pt-4 flex justify-end space-x-3">
                 <a
                     class="px-6 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--background)]"
-                    {% comment %} href="{% url 'dashboard:update_user_profile' pk=profile.pk %}" {# Stays on the same page #} {% endcomment %}
-                >
+                    href="{% url 'dashboard:list_users' %}" >
                     Cancel
                 </a>
                 <button

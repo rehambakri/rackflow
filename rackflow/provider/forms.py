@@ -4,6 +4,7 @@ from django.forms import inlineformset_factory
 from .models import  Provider,Shipment, Product,ShipmentProduct
 from datetime import date
 from django.core.exceptions import ValidationError
+
 class ShipmentForm(forms.ModelForm):
     # We will let the user select a consumer for the order
     provider = forms.ModelChoiceField(
@@ -84,6 +85,7 @@ class ProductArrivalForm(forms.Form):
         super().__init__(*args, **kwargs)
         if 'initial' in kwargs:
             self.fields['product_name'].initial = kwargs['initial'].get('product_name')
+            self.fields['product_id'].initial = kwargs['initial'].get('product_id')
 
 class ProviderForm(forms.ModelForm):
     class Meta: 
