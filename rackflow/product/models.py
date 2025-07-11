@@ -34,21 +34,22 @@ class Product(models.Model):
         null=False,
         blank=False,
     )
-    
+
     is_critical_product = models.BooleanField(default=False)
-    
 
     @property
     def quantity(self):
         result = self.details.aggregate(total=Sum("quantity"))
-        return result["total"] or 0
-    
+
+        if result["total"]:
+            return int(result["total"])
+        else:
+            return 0
+
     @property
     def is_critical(self):
         return self.quantity <= 70
 
-    
-    
     def __str__(self):
         return str(self.name)
 

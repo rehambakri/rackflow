@@ -338,6 +338,7 @@
     
 
     data.forEach((notification) => {
+        console.log(notification)
       const wrapper = document.createElement("div");
       wrapper.className =
         "flex gap-2 items-start p-3 border-b border-b-[var(--background-dark)] last:border-b-0";
@@ -380,6 +381,16 @@
         case "shipment_rejected":
           iconHtml = `<span class="text-red-600">📦❌</span>`;
           contentHtml = `${notification.content} <a href="/provider/shipmentDetails/${notification.shipment_id}" class="${anchorTagStyle}">Shipment Info</a>`;
+          break;
+
+        case "shipment_created":
+          iconHtml = `<span class="text-[var(--primary-dark)]">📦</span>`;
+          contentHtml = `${notification.content} <a href="/provider/shipmentDetails/${notification.shipment_id}" class="${anchorTagStyle}">View Shipment</a>`;
+          break;
+
+        case "order_created":
+          iconHtml = `<span class="text-[var(--primary-dark)]">📝</span>`;
+          contentHtml = `${notification.content} <a href="/consumer/orderDetails/${notification.order_id}" class="${anchorTagStyle}">View Order</a>`;
           break;
 
         default:
