@@ -60,3 +60,8 @@ ShipmentProductFormSet = inlineformset_factory(
     can_delete=True,  # Allow deleting existing order products
     fields=["product", "quantity"],
 )
+
+class ProviderForm(forms.ModelForm):
+    class Meta: 
+        model = Provider 
+        fields = ['name']

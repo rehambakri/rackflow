@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from .models import Shipment 
-from .models import Provider
+from .models import Shipment , Provider
+
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import ShipmentForm,ShipmentProductFormSet
 from django.db import transaction # For atomic operations
-
+from .forms import ProviderForm
 # Create your views here.
 
 class ShipmentDetails(DetailView):
@@ -78,6 +78,12 @@ class ShipmentCreateView(LoginRequiredMixin, CreateView):
         context['form'] = form
         return self.render_to_response(context)
 
+
+class ProviderCreateView(CreateView):
+    model = Provider 
+    form_class= ProviderForm
+    template_name = 'provider/create_provider.html'
+    success_url = reverse_lazy('provider:list_providers')
 
 class ListProviderView(LoginRequiredMixin, ListView):
     model = Provider
