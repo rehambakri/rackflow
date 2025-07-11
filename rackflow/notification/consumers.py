@@ -55,7 +55,7 @@ class ChatConsumer(WebsocketConsumer):
         notifications = Notification.objects.filter(receiver_id=remote_user.id).exclude(
             sender_id=remote_user.id
         )
-
+        print(list(notifications))
         self.send_notifications(notifications)
 
     # receive event, sent by the ASGI server when the remote sockets
@@ -87,10 +87,6 @@ class ChatConsumer(WebsocketConsumer):
         for notif in notifications:
             if notif.type == "product_created":
                 content = f'A new product "{notif.product.name}" was created by {notif.sender.first_name} {notif.sender.last_name} in the {notif.product.category.name} category'
-            elif notif.type == "product_updated":
-                content = f'product "{notif.product.name}" was updated by {notif.sender.first_name} {notif.sender.last_name}'
-            elif notif.type == "product_deleted":
-                content = f'product "{notif.product.name}" was deleted by {notif.sender.first_name} {notif.sender.last_name}'
             elif notif.type == "order_created":
                 content = f'A new order to "{notif.order.consumer.name}" which has {notif.order.quantity} products was created by {notif.sender.first_name} {notif.sender.last_name}'
             elif notif.type == "shipment_created":

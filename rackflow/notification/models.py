@@ -10,8 +10,6 @@ class Notification(models.Model):
         # these are sent to the manager (if he is not the sender. Don't send the
         # manager notifications about actions he has done)
         ("product_created", "Product Created Notification"),
-        ("product_deleted", "Product Deleted Notification"),
-        ("product_updated", "Product Updated Notification"),
         ("order_created", "Order Created Notification"),
         ("shipment_created", "Shipment Created Notification"),
         # these are sent to the users who made them

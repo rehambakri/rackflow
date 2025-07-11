@@ -1,5 +1,6 @@
 from authentication.models import CustomUser
 from django.db import models
+from django.db.models import Sum
 from product.models import Product
 
 
