@@ -41,7 +41,7 @@ class Product(models.Model):
     @property
     def quantity(self):
         result = self.details.aggregate(total=Sum("quantity"))
-        return int(result["total"]) or 0
+        return result["total"] or 0
     
     @property
     def is_critical(self):
