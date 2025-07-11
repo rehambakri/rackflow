@@ -14,4 +14,5 @@ urlpatterns = [
     path('orders/', views.ListOrderView.as_view(), name='list_orders'),
     path('orders/create/', views.OrderCreateView.as_view(), name='create_order'),
     path("api/orders/<int:id>/status/", views.update_order_status),
+    path('orders/update/<int:pk>/', views.OrderUpdateView.as_view(), name='update_order')
 ]

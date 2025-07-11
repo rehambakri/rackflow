@@ -2,7 +2,7 @@
 <div class="flex flex-1 justify-center w-full">
   <div class="container mx-auto flex flex-col flex-1 py-4">
     <div class="flex items-center gap-4 p-4 mb-12">
-      <a href="{% url 'product:list' %}">
+      <a href="{% url 'provider:list_shipments' %}">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="w-6"
@@ -17,7 +17,7 @@
       <h1
         class="text-black text-center md:text-left tracking-light text-[32px] font-bold leading-tight relative expand-underline"
       >
-        Create New Shipmnet
+        Update Shipmnet
       </h1>
     </div>
     <form method="post" class="px-4 py-3">
@@ -102,12 +102,12 @@
           {% endfor %}
         </div>
 
-        <button type="button" class="bg-[var(--primary)] py-2 px-4 rounded mt-4 block" id="add-product-button">
+        <button type="button" class="bg-[var(--primary)] py-2 px-4 rounded mt-4 ml-auto block" id="add-product-button">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 fill-white" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
         </button>
       </div>
 
-      <button type="submit" class="bg-[var(--primary)] py-2 px-4 rounded mt-4 block text-white ml-auto">Create Shipment</button>
+      <button type="submit" class="bg-[var(--primary)] py-2 px-4 rounded mt-4 block text-white">Update Shipment</button>
     </form>
   </div>
 </div>
