@@ -3,7 +3,7 @@ from django.urls import path
 from . import views 
 from .views import  toggle_user_status , ListUsersView 
 
-app_name = "authentication"
+app_name = "dashboard"
 urlpatterns = [
         path('add-employee/', views.Add_employee.as_view(), name='add_employee'),
         path('list_critical_products',views.is_critical, name='is_critical'),
