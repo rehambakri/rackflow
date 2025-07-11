@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from notification.models import Notification
 
-from .forms import ProductForm
+from .forms import ProductForm,CategoryForm
 from .models import Category, Product
 
 
@@ -101,3 +101,11 @@ class ProductDetails(DetailView):
     template_name = "product/details.html"
     context_object_name = "product"
     success_url = reverse_lazy("product:details")
+
+class CategoryCreateView(CreateView):
+    model = Category 
+    form_class= CategoryForm
+    context_object_name = "category"
+    template_name = 'product/create_category.html'
+    success_url = reverse_lazy('product:list')
+
