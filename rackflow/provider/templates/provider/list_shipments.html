@@ -27,7 +27,9 @@
       <div
         class="flex overflow-auto rounded-lg border border-[#e9e1ce] bg-[#fcfbf8]"
       >
-        <table class="flex-1 text-center md:text-left min-w-[1000px] overflow-x-auto">
+        <table
+          class="flex-1 text-center md:text-left min-w-[1000px] overflow-x-auto"
+        >
           <thead>
             <tr class="bg-[#fcfbf8]">
               <th
@@ -86,6 +88,7 @@
                 {{shipment.c_date}}
               </td>
               <td
+                id="status-{{ shipment.id }}"
                 class="h-[72px] px-4 py-2 {% if shipment.status == 'pending' %} text-[var(--primary-dark)] {%elif shipment.status == 'accepted'%} pulse-text {%elif shipment.status == 'arrived'%} text-green-500 {%else%} text-red-500 {%endif%} text-sm font-normal leading-normal capitalize"
               >
                 {{shipment.status}}
@@ -93,10 +96,43 @@
               <td
                 class="h-[72px] px-4 py-2 text-[var(--primary-dark)] text-sm font-normal leading-normal flex items-center gap-6"
               >
-                {% if shipment.status == 'pending' and user.is_superuser %}
-                <a href="" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Modify</a>
-                {% endif %}
-                <a href="{% url 'provider:details' shipment.id %}" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Detaisls</a>
+                <div
+                  id="actions-{{ shipment.id }}"
+                  class="flex items-center gap-6"
+                >
+                  {% if shipment.status == 'pending' and user.is_superuser %}
+                  <button
+                    onclick="sendStatusUpdate('{{ shipment.id }}', 'accepted')"
+                    class="py-1 px-3 rounded border border-[var(--primary-dark)]"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    onclick="sendStatusUpdate('{{ shipment.id }}', 'rejected')"
+                    class="py-1 px-3 rounded border border-[var(--primary-dark)]"
+                  >
+                    Reject
+                  </button>
+                  <a
+                    href="{% url 'provider:update_shipment' shipment.id %}"
+                    class="py-1 px-3 rounded border border-[var(--primary-dark)]"
+                    >Update</a
+                  >
+                  {% endif %}
+                  {% if shipment.status == 'accepted' and shipment.user.id == user.id %}
+                  <a
+                    href="{% url 'provider:process_arrival' shipment.id %}"
+                    class="py-1 px-3 rounded border border-[var(--primary-dark)]"
+                    >Arrived</a
+                  >
+                  {% endif %}
+                  <a
+                    href="{% url 'provider:details' shipment.id %}"
+                    id="details-{{ shipment.id }}"
+                    class="py-1 px-3 rounded border border-[var(--primary-dark)]"
+                    >Detaisls</a
+                  >
+                </div>
               </td>
             </tr>
             {% endfor %}
@@ -106,4 +142,56 @@
     </div>
   </div>
 </div>
-{% endblock content %}
+{% endblock content %} {% block script %}
+<script>
+  accepted_classes = "h-[72px] px-4 py-2 text-green-500 text-sm font-normal leading-normal capitalize";
+  rejected_classes = "h-[72px] px-4 py-2 text-red-500 text-sm font-normal leading-normal capitalize";
+
+  function sendStatusUpdate(orderId, status) {
+    fetch(`/provider/api/shipment/${orderId}/status/`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCSRFToken(),
+      },
+      body: JSON.stringify({ status: status }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Update status text and style
+          const td = document.getElementById(`status-${orderId}`);
+          td.innerHTML = status.charAt(0).toUpperCase() + status.slice(1);
+          td.className =
+            status === "accepted" ? accepted_classes : rejected_classes;
+
+          // Keep only the Details button
+          const actionsDiv = document.getElementById(`actions-${orderId}`);
+          const detailsButton = actionsDiv.querySelector(`#details-${orderId}`);
+          actionsDiv.innerHTML = "";
+          actionsDiv.appendChild(detailsButton);
+        } else {
+          return response.json().then((data) => {
+            alert("Failed to update: " + (data.detail || response.status));
+          });
+        }
+      })
+      .catch((err) => {
+        alert("Request failed: " + err);
+      });
+  }
+
+  // Get CSRF token from cookie (for Django CSRF protection)
+  function getCSRFToken() {
+    const name = "csrftoken";
+    const cookies = document.cookie.split(";");
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + "=")) {
+        return decodeURIComponent(cookie.slice(name.length + 1));
+      }
+    }
+    return "";
+  }
+</script>
+
+{% endblock script %}

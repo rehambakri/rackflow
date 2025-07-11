@@ -2,8 +2,8 @@
 from django import forms
 from django.forms import inlineformset_factory
 from .models import  Provider,Shipment, Product,ShipmentProduct
-
-
+from datetime import date
+from django.core.exceptions import ValidationError
 class ShipmentForm(forms.ModelForm):
     # We will let the user select a consumer for the order
     provider = forms.ModelChoiceField(
@@ -60,6 +60,30 @@ ShipmentProductFormSet = inlineformset_factory(
     can_delete=True,  # Allow deleting existing order products
     fields=["product", "quantity"],
 )
+
+def validate_future_date(value):
+    if value < date.today():
+        raise ValidationError("Expiration date cannot be in the past!")
+
+class ProductArrivalForm(forms.Form):
+    product_id = forms.IntegerField(widget=forms.HiddenInput())
+    product_name = forms.CharField(
+        widget=forms.TextInput(attrs={'readonly': True}),
+        required=False
+    )
+    quantity = forms.IntegerField(
+        min_value=1,
+        widget=forms.NumberInput(attrs={'class': 'quantity-input','readonly': True})
+    )
+    expire_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+        validators=[validate_future_date]
+    )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'initial' in kwargs:
+            self.fields['product_name'].initial = kwargs['initial'].get('product_name')
 
 class ProviderForm(forms.ModelForm):
     class Meta: 

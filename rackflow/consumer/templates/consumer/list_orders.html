@@ -97,16 +97,17 @@
 
               <div id="actions-{{ order.id }}" class="flex items-center gap-6">
                 {% if order.status == 'pending' and user.is_superuser %}
-                <button onclick="sendStatusUpdate({{ order.id }}, 'accepted')"
+                <button onclick="sendStatusUpdate('{{ order.id }}', 'accepted')"
                         class="py-1 px-3 rounded border border-[var(--primary-dark)]">
                   Accept
                 </button>
-                <button onclick="sendStatusUpdate({{ order.id }}, 'rejected')"
+                <button onclick="sendStatusUpdate('{{ order.id }}', 'rejected')"
                         class="py-1 px-3 rounded border border-[var(--primary-dark)]">
                   Reject
                 </button>
+                <a href="{% url 'consumer:update_order' order.id%}" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Update</a>
                 {% endif %}
-                <a href="{% url 'consumer:details' order.id%}" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Details</a>
+                <a href="{% url 'consumer:details' order.id%}" id="details-{{ order.id }}" class="py-1 px-3 rounded border border-[var(--primary-dark)]">Details</a>
               </td>
             </tr>
             {% endfor %}
@@ -144,7 +145,7 @@
 
           // Keep only the Details button
           const actionsDiv = document.getElementById(`actions-${orderId}`);
-          const detailsButton = actionsDiv.querySelector("a");
+          const detailsButton = actionsDiv.querySelector(`#details-${orderId}`);
           actionsDiv.innerHTML = "";
           actionsDiv.appendChild(detailsButton);
         } else {

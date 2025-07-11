@@ -1,0 +1,78 @@
+<!-- templates/provider/process_arrival.html -->
+{% extends 'base.html' %} {% block content %}
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center gap-4 p-4 mb-12">
+    <a href="{% url 'provider:list_shipments' %}">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6" viewBox="0 0 448 512">
+        <path
+          d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"
+        />
+      </svg>
+    </a>
+
+    <h1
+      class="text-black text-center md:text-left tracking-light text-[32px] font-bold leading-tight relative expand-underline"
+    >
+      Process Arrived Shipment #{{ object.id }}
+    </h1>
+  </div>
+  <div class="flex flex-col p-4 gap-3">
+    <h2 class="text-xl font-semibold mb-2">Shipment Details</h2>
+
+    <p
+      class="text-black text-lg font-bold leading-tight tracking-[-0.015em] p-2"
+    >
+      <span class="text-[var(--primary-dark)]"> Provider : </span>
+      {{ object.provider.name }}
+    </p>
+
+    <p
+      class="text-black text-lg font-bold leading-tight tracking-[-0.015em] p-2"
+    >
+      <strong class="text-[var(--primary-dark)]">Created : </strong>
+      {{ object.c_date|date:"Y-m-d H:i" }}
+    </p>
+  </div>
+
+  <form method="post" class="space-y-6">
+    {% csrf_token %}
+
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <h2 class="text-xl font-semibold mb-4">Product Arrival Details</h2>
+
+      {{ formset.management_form }}
+
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="p-3 text-left">Product</th>
+            <th class="p-3 text-left">Quantity</th>
+            <th class="p-3 text-left">Expiration Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for form in formset %}
+          <tr class="border-t">
+            <td class="p-3">{{ form.initial.product_name }}</td>
+            <td class="p-3">{{ form.quantity }} {{ form.quantity.errors }}</td>
+            <td class="p-3">
+              {{ form.expire_date }}
+              {{ form.expire_date.errors }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex justify-end gap-4">
+      <button
+        type="submit"
+        class="bg-[var(--primary)] py-2 px-4 rounded mt-4 block text-white ml-auto"
+      >
+        Confirm Arrival
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
